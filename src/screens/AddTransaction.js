@@ -2,6 +2,8 @@ import React, { useContext, useState } from "react";
 import { View, TextInput, Button, StyleSheet } from "react-native";
 import dayjs from "dayjs";
 
+import { v4 as uuidv4 } from "uuid";
+
 //component import
 import DatePicker from "../components/DatePicker";
 import InputField from "../components/InputField";
@@ -18,28 +20,19 @@ const AddTransaction = ({ route, navigation }) => {
   const handleDateChange = (newDate) => {
     setDate(newDate);
   };
+
   const TransactionsCtx = useContext(TransactionContext);
 
-  const handleAddTransaction = () => {
-    // Handle adding transaction logic here
-    console.log("Transaction added:", {
-      amount,
-      category,
-      note,
-      date,
-      sourceOfFund,
-    });
+  const transactionId = uuidv4();
 
-    TransactionsCtx.addTransaction({
-      amount,
-      category,
-      note,
-      date,
-      sourceOfFund,
-      date,
-    });
+  const handleAddTransaction = () => {
+    const transactionData = { amount, category, note, date, sourceOfFund };
+
+    // Handle adding transaction logic here
+    TransactionsCtx.addTransaction({ id: transactionId, ...transactionData });
 
     navigation.goBack();
+    console.log("Transaction added:", transactionData);
   };
 
   return (

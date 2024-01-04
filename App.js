@@ -67,7 +67,7 @@ function MainPage() {
         name="ReportsTab"
         component={ReportStackScreen}
         options={{
-          tabBarLabel: "Account",
+          tabBarLabel: "Report",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="document-text" color={color} size={size} />
           ),

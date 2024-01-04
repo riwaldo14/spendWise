@@ -17,7 +17,7 @@ function transactionsReducer(state, action) {
       return inverted;
     case "UPDATE":
       const updatableTransactionIndex = state.findIndex(
-        (expense) => expense.id === action.payload.id
+        (transaction) => transaction.id === action.payload.id
       );
       const updatableTransaction = state[updatableTransactionIndex];
       const updatedItem = { ...updatableTransaction, ...action.payload.data };
@@ -25,7 +25,7 @@ function transactionsReducer(state, action) {
       updatedTransactions[updatableTransactionIndex] = updatedItem;
       return updatedTransactions;
     case "DELETE":
-      return state.filter((expense) => expense.id !== action.payload);
+      return state.filter((transaction) => transaction.id !== action.payload);
     default:
       return state;
   }
