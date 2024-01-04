@@ -1,8 +1,9 @@
 import * as React from "react";
-import { Button, Text, View } from "react-native";
+import { Button, Pressable, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Ionicons } from "@expo/vector-icons";
 
 //Import Screens
 import AccountScreen from "./src/screens/AccountScreen";
@@ -13,76 +14,114 @@ import DetailsScreen from "./src/screens/DetailsScreen";
 import AddTransaction from "./src/screens/AddTransaction";
 import TransactionContextProvider from "./store/transaction-context";
 
-const HomeStack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator();
 
 function HomeStackScreen() {
   return (
-    <HomeStack.Navigator>
-      <HomeStack.Screen name="Home" component={HomeScreen} />
-      {/* <HomeStack.Screen name="Details" component={DetailsScreen} /> */}
-    </HomeStack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Home" component={HomeScreen} />
+    </Stack.Navigator>
   );
 }
-
-const ReportStack = createNativeStackNavigator();
 
 function ReportStackScreen() {
   return (
-    <ReportStack.Navigator>
-      <ReportStack.Screen name="Reports" component={ReportScreen} />
-    </ReportStack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Reports" component={ReportScreen} />
+    </Stack.Navigator>
   );
 }
-
-const AddTransactionStack = createNativeStackNavigator();
-
-function AddTransactionStackScreen() {
-  return (
-    <AddTransactionStack.Navigator>
-      <AddTransactionStack.Screen
-        name="AddTransaction"
-        component={AddTransaction}
-      />
-    </AddTransactionStack.Navigator>
-  );
-}
-
-const BudgetStack = createNativeStackNavigator();
 
 function BudgetStackScreen() {
   return (
-    <BudgetStack.Navigator>
-      <BudgetStack.Screen name="Budget" component={BudgetScreen} />
-    </BudgetStack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Budget" component={BudgetScreen} />
+    </Stack.Navigator>
   );
 }
 
-const AccountStack = createNativeStackNavigator();
-
 function AccountStackScreen() {
   return (
-    <AccountStack.Navigator>
-      <AccountStack.Screen name="Account" component={AccountScreen} />
-    </AccountStack.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Account" component={AccountScreen} />
+    </Stack.Navigator>
   );
 }
 
 const Tab = createBottomTabNavigator();
 
+function MainPage() {
+  return (
+    <Tab.Navigator screenOptions={{ headerShown: false }}>
+      <Tab.Screen
+        name="HomeTab"
+        component={HomeStackScreen}
+        options={{
+          tabBarLabel: "Home",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="home" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="ReportsTab"
+        component={ReportStackScreen}
+        options={{
+          tabBarLabel: "Account",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="document-text" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AddTransactionTab"
+        component={AddTransaction}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate("AddTransaction");
+          },
+        })}
+        options={{
+          tabBarLabel: "",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="ios-add-circle-outline" color={color} size={30} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="BudgetTab"
+        component={BudgetStackScreen}
+        options={{
+          tabBarLabel: "Budget",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="wallet" color={color} size={size} />
+          ),
+        }}
+      />
+      <Tab.Screen
+        name="AccountTab"
+        component={AccountStackScreen}
+        options={{
+          tabBarLabel: "Account",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="person" color={color} size={size} />
+          ),
+        }}
+      />
+    </Tab.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <TransactionContextProvider>
       <NavigationContainer>
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
-          <Tab.Screen name="HomeTab" component={HomeStackScreen} />
-          <Tab.Screen name="ReportsTab" component={ReportStackScreen} />
-          <Tab.Screen
-            name="AddTransactionTab"
-            component={AddTransactionStackScreen}
-          />
-          <Tab.Screen name="BudgetTab" component={BudgetStackScreen} />
-          <Tab.Screen name="AccountTab" component={AccountStackScreen} />
-        </Tab.Navigator>
+        <Stack.Navigator>
+          <Stack.Screen name="MainPage" component={MainPage} />
+          <Stack.Screen name="AddTransaction" component={AddTransaction} />
+          <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+        </Stack.Navigator>
       </NavigationContainer>
     </TransactionContextProvider>
   );

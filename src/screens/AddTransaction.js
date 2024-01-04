@@ -7,7 +7,7 @@ import DatePicker from "../components/DatePicker";
 import InputField from "../components/InputField";
 import { TransactionContext } from "../../store/transaction-context";
 
-const AddTransaction = () => {
+const AddTransaction = ({ route, navigation }) => {
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
@@ -15,6 +15,9 @@ const AddTransaction = () => {
   const [date, setDate] = useState(dayjs());
   const [sourceOfFund, setSourceOfFund] = useState("");
 
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+  };
   const TransactionsCtx = useContext(TransactionContext);
 
   const handleAddTransaction = () => {
@@ -35,6 +38,8 @@ const AddTransaction = () => {
       sourceOfFund,
       date,
     });
+
+    navigation.goBack();
   };
 
   return (
@@ -63,7 +68,8 @@ const AddTransaction = () => {
         onChangeText={(text) => setSourceOfFund(text)}
       />
 
-      <DatePicker value={date} onValueChange={(date) => setDate(date)} />
+      <DatePicker value={date} onValueChange={handleDateChange} />
+      {/* <DatePicker value={date} onValueChange={(date) => setDate(date)} /> */}
       <Button title="Add Transaction" onPress={handleAddTransaction} />
     </View>
   );

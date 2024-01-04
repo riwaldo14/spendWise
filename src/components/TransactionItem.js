@@ -1,20 +1,39 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
+import { useNavigation } from "@react-navigation/native";
+import dayjs from "dayjs";
 
-export default function TransactionItem({ id, amount, category, note, sof }) {
+export default function TransactionItem({
+  id,
+  amount,
+  category,
+  note,
+  sof,
+  date,
+}) {
+  const navigation = useNavigation();
+
+  function transactionItemPressHandler() {
+    navigation.navigate("DetailsScreen", { transactionId: id });
+  }
+
   return (
-    <View style={styles.card}>
-      <View style={styles.row}>
-        <View style={styles.categoryIcon}>
-          {/* Insert Category Icon Here */}
+    <Pressable onPress={transactionItemPressHandler}>
+      <View style={styles.card}>
+        <View style={styles.row}>
+          <View style={styles.categoryIcon}>
+            {/* Insert Category Icon Here */}
+          </View>
+          <View style={styles.details}>
+            <Text style={styles.category}>{"CAT> " + category}</Text>
+            <Text style={styles.date}>{"SOF> " + sof}</Text>
+            <Text style={styles.date}>{"NOTE> " + note}</Text>
+            <Text style={styles.date}>{"DATE> " + date}</Text>
+          </View>
+          <Text style={styles.amount}>{amount}</Text>
         </View>
-        <View style={styles.details}>
-          <Text style={styles.category}>{category}</Text>
-          <Text style={styles.date}>Jan 1, 2024</Text>
-        </View>
-        <Text style={styles.amount}>{amount}</Text>
       </View>
-    </View>
+    </Pressable>
   );
 }
 
