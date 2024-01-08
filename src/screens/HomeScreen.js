@@ -20,10 +20,15 @@ export default function HomeScreen() {
   return (
     <View>
       <SummaryCard />
-      <Text>Transaction item↓ </Text>
-      <TransactionItem />
       <Text>Transaction List here ↓↓ </Text>
-      <TransactionList transactions={TransactionsCtx.transactions} />
+      {TransactionsCtx.transactions.length === 0 ? (
+        <Text style={{ textAlign: "center", padding: 32 }}>
+          Empty State: No transactions available
+        </Text>
+      ) : (
+        <TransactionList transactions={TransactionsCtx.transactions} />
+      )}
+      {/* <TransactionList transactions={TransactionsCtx.transactions} /> */}
     </View>
   );
 }

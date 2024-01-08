@@ -67,7 +67,7 @@ const AddTransaction = ({ route, navigation }) => {
         />
         <Button
           title="List Categories"
-          onPress={() => navigation.navigate("CategoryList")}
+          onPress={() => navigation.navigate("SelectCategory")}
         />
       </View>
       {/* Add more components or content here */}

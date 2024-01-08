@@ -3,6 +3,7 @@ import { Button, Pressable, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+
 import { Ionicons } from "@expo/vector-icons";
 
 //Import Screens
@@ -14,6 +15,8 @@ import DetailsScreen from "./src/screens/DetailsScreen";
 import AddTransaction from "./src/screens/AddTransaction";
 import TransactionContextProvider from "./store/transaction-context";
 import CategoryListScreen from "./src/screens/CategoryListScreen";
+import SelectCategoryScreen from "./src/screens/SelectCategoryScreen";
+import CategoryContextProvider from "./store/category-context";
 
 const Stack = createNativeStackNavigator();
 
@@ -117,14 +120,20 @@ function MainPage() {
 export default function App() {
   return (
     <TransactionContextProvider>
-      <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen name="MainPage" component={MainPage} />
-          <Stack.Screen name="AddTransaction" component={AddTransaction} />
-          <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
-          <Stack.Screen name="CategoryList" component={CategoryListScreen} />
-        </Stack.Navigator>
-      </NavigationContainer>
+      <CategoryContextProvider>
+        <NavigationContainer>
+          <Stack.Navigator>
+            <Stack.Screen name="MainPage" component={MainPage} />
+            <Stack.Screen name="AddTransaction" component={AddTransaction} />
+            <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+            <Stack.Screen name="CategoryList" component={CategoryListScreen} />
+            <Stack.Screen
+              name="SelectCategory"
+              component={SelectCategoryScreen}
+            />
+          </Stack.Navigator>
+        </NavigationContainer>
+      </CategoryContextProvider>
     </TransactionContextProvider>
   );
   ``;

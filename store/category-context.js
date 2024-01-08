@@ -22,7 +22,44 @@ function categoriesReducer(state, action) {
 }
 
 export default function CategoryContextProvider({ children }) {
-  const [categoriesState, dispatch] = useReducer(categoriesReducer, []);
+  const initialCategories = [
+    {
+      id: 1,
+      categoryName: "Electronics",
+      categoryDescription: "Devices and gadgets",
+      subcategories: [
+        { id: 1, name: "Smartphones" },
+        { id: 2, name: "Laptops" },
+        { id: 3, name: "Tablets" },
+      ],
+    },
+    {
+      id: 2,
+      categoryName: "Clothing",
+      categoryDescription: "Fashion and apparel",
+      subcategories: [
+        { id: 1, name: "Men's Clothing" },
+        { id: 2, name: "Women's Clothing" },
+        { id: 3, name: "Kids' Clothing" },
+      ],
+    },
+    {
+      id: 3,
+      categoryName: "Home & Kitchen",
+      categoryDescription: "Household items",
+      subcategories: [
+        { id: 1, name: "Furniture" },
+        { id: 2, name: "Cookware" },
+        { id: 3, name: "Home Decor" },
+      ],
+    },
+    // Add more initial categories as needed
+  ];
+
+  const [categoriesState, dispatch] = useReducer(
+    categoriesReducer,
+    initialCategories
+  );
 
   function addCategory(categoryData) {
     dispatch({ type: "ADD", payload: categoryData });
@@ -33,7 +70,7 @@ export default function CategoryContextProvider({ children }) {
   }
 
   function deleteCategory(id) {
-    dispatch({ typeof: "DELETE", payload: id });
+    dispatch({ type: "DELETE", payload: id });
   }
 
   const value = {
@@ -42,4 +79,10 @@ export default function CategoryContextProvider({ children }) {
     addCategory: addCategory,
     deleteCategory: deleteCategory,
   };
+
+  return (
+    <CategoryContext.Provider value={value}>
+      {children}
+    </CategoryContext.Provider>
+  );
 }
