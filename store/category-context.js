@@ -2,10 +2,18 @@ import { createContext, useReducer, useState } from "react";
 
 export const CategoryContext = createContext({
   categories: [],
-  addCategory: ({ categoryName, categoryDescription }) => {},
+  addCategory: ({
+    categoryName,
+    categoryDescription,
+    parentCategory,
+    CategoryType,
+  }) => {},
   setCategory: (categories) => {},
   deleteCategory: (id) => {},
-  updateCategory: (id, { categoryName, categoryDescription }) => {},
+  updateCategory: (
+    id,
+    { categoryName, categoryDescription, parentCategory }
+  ) => {},
 });
 
 function categoriesReducer(state, action) {
@@ -24,34 +32,39 @@ function categoriesReducer(state, action) {
 export default function CategoryContextProvider({ children }) {
   const initialCategories = [
     {
-      id: 1,
-      categoryName: "Electronics",
-      categoryDescription: "Devices and gadgets",
-      subcategories: [
-        { id: 1, name: "Smartphones" },
-        { id: 2, name: "Laptops" },
-        { id: 3, name: "Tablets" },
-      ],
+      id: "1",
+      categoryName: "Food",
+      categoryDescription: "Expenses related to food",
+      parentCategory: null,
+      categoryType: "Expense",
     },
     {
-      id: 2,
-      categoryName: "Clothing",
-      categoryDescription: "Fashion and apparel",
-      subcategories: [
-        { id: 1, name: "Men's Clothing" },
-        { id: 2, name: "Women's Clothing" },
-        { id: 3, name: "Kids' Clothing" },
-      ],
+      id: "2",
+      categoryName: "Salary",
+      categoryDescription: "Monthly income",
+      parentCategory: null,
+      categoryType: "Income",
     },
     {
-      id: 3,
-      categoryName: "Home & Kitchen",
-      categoryDescription: "Household items",
-      subcategories: [
-        { id: 1, name: "Furniture" },
-        { id: 2, name: "Cookware" },
-        { id: 3, name: "Home Decor" },
-      ],
+      id: "3",
+      categoryName: "Groceries",
+      categoryDescription: "Expenses on household essentials",
+      parentCategory: "1",
+      categoryType: "Expense",
+    },
+    {
+      id: "4",
+      categoryName: "Bonus",
+      categoryDescription: "Year-end bonus",
+      parentCategory: "2",
+      categoryType: "Income",
+    },
+    {
+      id: "5",
+      categoryName: "Dining Out",
+      categoryDescription: "Expenses on eating out",
+      parentCategory: "1",
+      categoryType: "Expense",
     },
     // Add more initial categories as needed
   ];

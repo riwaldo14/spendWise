@@ -5,33 +5,78 @@ import React, { useContext } from "react";
 
 // const CategoryCtx = useContext(CategoryContext);
 
-export default function CategoryListScreen({ categoryType }) {
-  // console.log(
-  //   "TransactionCtx dari Category List JSON>>>",
-  //   JSON.stringify(CategoryCtx.categories, null, 2)
-  // );
+export default function CategoryListScreen({ data, categoryType }) {
+  // Filter the data based on the categoryType
+  const filteredData = data.filter(
+    (category) => category.categoryType === categoryType
+  );
+
   return (
     <View style={styles.listContainer}>
-      <View style={styles.icon}></View>
-      <View style={styles.label}></View>
-      <Text>{categoryType}</Text>
+      {filteredData.map((category, index) => (
+        <View
+          key={category.id}
+          style={[styles.categoryItem, index !== 0 && { marginTop: 16 }]}
+        >
+          <View style={styles.parentCategoryContainer}>
+            <View style={styles.icon} />
+            <Text style={styles.categoryName}>{category.categoryName}</Text>
+          </View>
+          {category.subcategories && category.subcategories.length > 0 && (
+            <View style={styles.subcategoriesContainer}>
+              {category.subcategories.map((subcategory) => (
+                <View key={subcategory.id} style={styles.subcategoryItem}>
+                  <View style={styles.subcategoryIcon} />
+                  <Text>{subcategory.name}</Text>
+                </View>
+              ))}
+            </View>
+          )}
+        </View>
+      ))}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   listContainer: {
-    padding: 16,
+    margin: 8,
+    paddingVertical: 16,
+    paddingHorizontal: 16,
     backgroundColor: "#dcdcdc",
     marginHorizontal: 16,
-    flexDirection: "row",
-    alignItems: "center",
+  },
+  categoryItem: {
+    marginBottom: 12,
   },
   icon: {
     marginRight: 16,
     width: 24,
     height: 24,
     backgroundColor: "green",
-    borderRadius: 16,
+    borderRadius: 12,
+  },
+
+  parentCategoryContainer: {
+    flexDirection: "row",
+  },
+  categoryName: {
+    fontWeight: "bold",
+    marginRight: 8,
+  },
+  subcategoriesContainer: {
+    marginLeft: 24, // Indentation for subcategories
+  },
+  subcategoryItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  subcategoryIcon: {
+    marginRight: 8,
+    width: 16,
+    height: 16,
+    backgroundColor: "blue",
+    borderRadius: 8,
   },
 });

@@ -12,22 +12,34 @@ export default function SelectCategoryScreen() {
   const Tab = createMaterialTopTabNavigator();
 
   const ExpensesScreen = () => {
-    return <CategoryListScreen categoryType="Expense" />;
+    return (
+      <CategoryListScreen
+        data={CategoryCtx.categories}
+        categoryType="Expense"
+      />
+    );
   };
 
   const IncomeScreen = () => {
-    return <CategoryListScreen categoryType="Income" />;
+    return (
+      <CategoryListScreen data={CategoryCtx.categories} categoryType="Income" />
+    );
   };
 
   const DebtLoanScreen = () => {
-    return <CategoryListScreen categoryType="Debt/Loan" />;
+    return (
+      <CategoryListScreen
+        data={CategoryCtx.categories}
+        categoryType="Debt/Loan"
+      />
+    );
   };
 
   const CategoryCtx = useContext(CategoryContext);
-  console.log(
-    "TransactionCtx dari Category List JSON>>>",
-    JSON.stringify(CategoryCtx.categories, null, 2)
-  );
+  // console.log(
+  //   "TransactionCtx dari Category List JSON>>>",
+  //   JSON.stringify(CategoryCtx.categories, null, 2)
+  // );
 
   return (
     <NavigationContainer independent={true}>
