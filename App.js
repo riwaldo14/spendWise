@@ -17,6 +17,7 @@ import TransactionContextProvider from "./store/transaction-context";
 import CategoryListScreen from "./src/screens/CategoryListScreen";
 import SelectCategoryScreen from "./src/screens/SelectCategoryScreen";
 import CategoryContextProvider from "./store/category-context";
+import AddNewCategoryScreen from "./src/screens/AddNewCategoryScreen";
 
 const Stack = createNativeStackNavigator();
 
@@ -130,6 +131,10 @@ export default function App() {
             <Stack.Screen
               name="SelectCategory"
               component={SelectCategoryScreen}
+            />
+            <Stack.Screen
+              name="AddNewCategory"
+              component={AddNewCategoryScreen}
             />
           </Stack.Navigator>
         </NavigationContainer>
