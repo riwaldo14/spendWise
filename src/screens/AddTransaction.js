@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, TextInput, Button, StyleSheet } from "react-native";
+import { View, TextInput, Button, StyleSheet, Pressable } from "react-native";
 import dayjs from "dayjs";
 
 import { v4 as uuidv4 } from "uuid";
@@ -10,6 +10,7 @@ import InputField from "../components/InputField";
 import { TransactionContext } from "../../store/transaction-context";
 
 const AddTransaction = ({ route, navigation }) => {
+  // const [amount, setAmount] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
@@ -26,6 +27,21 @@ const AddTransaction = ({ route, navigation }) => {
 
   const editTransaction = route.params?.selectedTransaction;
 
+  // Retrieve the selected category from the route params
+  const selectedCategory = route.params?.selectedCategory;
+
+  useEffect(() => {
+    if (editTransaction) {
+      setAmount(editTransaction.amount);
+      setNote(editTransaction.note);
+      setSourceOfFund(editTransaction.sourceOfFund);
+      setDate(editTransaction.date);
+      setCategory(editTransaction.category);
+    } else if (selectedCategory) {
+      setCategory(selectedCategory.categoryName);
+    }
+  }, [editTransaction, selectedCategory, category]);
+
   function submitHandler() {
     const transactionData = { amount, category, note, date, sourceOfFund };
     if (editTransaction) {
@@ -38,16 +54,6 @@ const AddTransaction = ({ route, navigation }) => {
 
     navigation.goBack();
   }
-
-  useEffect(() => {
-    if (editTransaction) {
-      setAmount(editTransaction.amount);
-      setCategory(editTransaction.category);
-      setNote(editTransaction.note);
-      setSourceOfFund(editTransaction.sourceOfFund);
-      setDate(editTransaction.date);
-    }
-  }, [editTransaction]);
 
   return (
     <View style={styles.container}>
@@ -65,6 +71,7 @@ const AddTransaction = ({ route, navigation }) => {
           value={category}
           onChangeText={(text) => setCategory(text)}
         />
+
         <Button
           title="List Categories"
           onPress={() => navigation.navigate("SelectCategory")}

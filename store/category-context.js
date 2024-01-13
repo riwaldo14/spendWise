@@ -31,6 +31,7 @@ function categoriesReducer(state, action) {
 
 export default function CategoryContextProvider({ children }) {
   const initialCategories = [
+    //food category
     {
       id: "1",
       categoryName: "Food",
@@ -40,27 +41,43 @@ export default function CategoryContextProvider({ children }) {
     },
     {
       id: "2",
+      categoryName: "Groceries",
+      categoryDescription: "Expenses on household essentials",
+      parentCategory: "Food",
+      categoryType: "Expense",
+    },
+    {
+      id: "3",
+      categoryName: "Meals",
+      categoryDescription: "Expenses on household essentials",
+      parentCategory: "Food",
+      categoryType: "Expense",
+    },
+    {
+      id: "4",
+      categoryName: "Service",
+      categoryDescription: "Expenses on household essentials",
+      parentCategory: null,
+      categoryType: "Expense",
+    },
+
+    {
+      id: "5",
       categoryName: "Salary",
       categoryDescription: "Monthly income",
       parentCategory: null,
       categoryType: "Income",
     },
+
     {
-      id: "3",
-      categoryName: "Groceries",
-      categoryDescription: "Expenses on household essentials",
-      parentCategory: "1",
-      categoryType: "Expense",
-    },
-    {
-      id: "4",
+      id: "6",
       categoryName: "Bonus",
       categoryDescription: "Year-end bonus",
-      parentCategory: "2",
+      parentCategory: "Salary",
       categoryType: "Income",
     },
     {
-      id: "5",
+      id: "7",
       categoryName: "Dining Out",
       categoryDescription: "Expenses on eating out",
       parentCategory: "1",
