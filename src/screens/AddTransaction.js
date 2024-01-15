@@ -16,6 +16,7 @@ const AddTransaction = ({ route, navigation }) => {
   const [note, setNote] = useState("");
   const [date, setDate] = useState(dayjs());
   const [sourceOfFund, setSourceOfFund] = useState("");
+
   //generate the ID
   const transactionId = uuidv4();
   //date change handler
@@ -27,8 +28,18 @@ const AddTransaction = ({ route, navigation }) => {
 
   const editTransaction = route.params?.selectedTransaction;
 
-  // Retrieve the selected category from the route params
   const selectedCategory = route.params?.selectedCategory;
+
+  // console.log("edit transaction params> " + editTransaction);
+  console.log(
+    "edit transaction params> ",
+    JSON.stringify(editTransaction, null, 2)
+  );
+  console.log(
+    "selected category params> ",
+    JSON.stringify(selectedCategory, null, 2)
+  );
+  // console.log("select category params> " + selectedCategory);
 
   useEffect(() => {
     if (editTransaction) {
@@ -55,6 +66,12 @@ const AddTransaction = ({ route, navigation }) => {
     navigation.goBack();
   }
 
+  function chooseCategoryHandler() {
+    navigation.navigate("SelectCategory", {
+      editTransaction: editTransaction,
+    });
+  }
+
   return (
     <View style={styles.container}>
       <InputField
@@ -72,10 +89,7 @@ const AddTransaction = ({ route, navigation }) => {
           onChangeText={(text) => setCategory(text)}
         />
 
-        <Button
-          title="List Categories"
-          onPress={() => navigation.navigate("SelectCategory")}
-        />
+        <Button title="List Categories" onPress={chooseCategoryHandler} />
       </View>
       {/* Add more components or content here */}
 

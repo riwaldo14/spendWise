@@ -7,9 +7,11 @@ import CategoryContextProvider, {
   CategoryContext,
 } from "../../store/category-context";
 
-export default function SelectCategoryScreen({ navigation }) {
+export default function SelectCategoryScreen({ navigation, route }) {
   // Create a Tab navigator
   const Tab = createMaterialTopTabNavigator();
+
+  console.log("test passing params> ", route.params?.editTransaction);
 
   const ExpensesScreen = () => {
     return (
@@ -17,6 +19,7 @@ export default function SelectCategoryScreen({ navigation }) {
         data={CategoryCtx.categories}
         categoryType="Expense"
         navigation={navigation}
+        editTransaction={route.params?.editTransaction}
       />
     );
   };
@@ -27,6 +30,7 @@ export default function SelectCategoryScreen({ navigation }) {
         data={CategoryCtx.categories}
         categoryType="Income"
         navigation={navigation}
+        editTransaction={route.params?.editTransaction}
       />
     );
   };
@@ -37,6 +41,7 @@ export default function SelectCategoryScreen({ navigation }) {
         data={CategoryCtx.categories}
         categoryType="Debt/Loan"
         navigation={navigation}
+        editTransaction={route.params?.editTransaction}
       />
     );
   };

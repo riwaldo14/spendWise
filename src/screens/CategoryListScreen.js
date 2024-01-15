@@ -6,21 +6,29 @@ import CustomButton from "../components/CustomButton";
 
 // const CategoryCtx = useContext(CategoryContext);
 
-export default function CategoryListScreen({ data, categoryType, navigation }) {
+export default function CategoryListScreen({
+  data,
+  categoryType,
+  navigation,
+  route,
+  editTransaction,
+}) {
   // Filter the data based on the categoryType
   const filteredData = data.filter(
     (category) => category.categoryType === categoryType
   );
+
+  console.log("edit transaction di category list screen", editTransaction);
 
   const renderCategory = (category, level = 0) => {
     return (
       <Pressable
         key={category.id}
         onPress={() => {
-          // console.log("category name ", category.categoryName);
-          navigation.goBack();
-          // Pass the selected category back to the previous screen
-          navigation.navigate("AddTransaction", { selectedCategory: category });
+          navigation.navigate("AddTransaction", {
+            selectedCategory: category,
+            selectedTransaction: editTransaction,
+          });
         }}
       >
         <View
