@@ -8,6 +8,7 @@ import { v4 as uuidv4 } from "uuid";
 import DatePicker from "../components/DatePicker";
 import InputField from "../components/InputField";
 import { TransactionContext } from "../../store/transaction-context";
+import { useFocusEffect } from "@react-navigation/native";
 
 const AddTransaction = ({ route, navigation }) => {
   // const [amount, setAmount] = useState("");
@@ -47,11 +48,13 @@ const AddTransaction = ({ route, navigation }) => {
       setNote(editTransaction.note);
       setSourceOfFund(editTransaction.sourceOfFund);
       setDate(editTransaction.date);
-      setCategory(editTransaction.category);
-    } else if (selectedCategory) {
-      setCategory(selectedCategory.categoryName);
+      setCategory(
+        selectedCategory
+          ? selectedCategory.categoryName
+          : editTransaction.category
+      );
     }
-  }, [editTransaction, selectedCategory, category]);
+  }, [editTransaction, selectedCategory]);
 
   function submitHandler() {
     const transactionData = { amount, category, note, date, sourceOfFund };
@@ -87,6 +90,7 @@ const AddTransaction = ({ route, navigation }) => {
           placeholder="Category"
           value={category}
           onChangeText={(text) => setCategory(text)}
+          // editable={false}
         />
 
         <Button title="List Categories" onPress={chooseCategoryHandler} />
