@@ -48,6 +48,10 @@ export default function DetailsScreen({ route, navigation }) {
             <Text>{selectedTransaction.sourceOfFund}</Text>
           </View>
           <View style={styles.details}>
+            <Text style={styles.label}>transaction Type:</Text>
+            <Text>{selectedTransaction.transactionType}</Text>
+          </View>
+          <View style={styles.details}>
             <Pressable onPress={editTransactionHandler} style={styles.button}>
               <Text>Edit</Text>
             </Pressable>

@@ -2,10 +2,20 @@ import { createContext, useReducer } from "react";
 
 export const TransactionContext = createContext({
   transactions: [],
-  addTransaction: ({ amount, category, note, sof, date }) => {},
+  addTransaction: ({
+    amount,
+    category,
+    note,
+    sof,
+    date,
+    transactionType,
+  }) => {},
   setTransaction: (transactions) => {},
   deleteTransaction: (id) => {},
-  updateTransaction: (id, { amount, category, note, sof, date }) => {},
+  updateTransaction: (
+    id,
+    { amount, category, note, sof, date, transactionType }
+  ) => {},
 });
 
 function transactionsReducer(state, action) {
