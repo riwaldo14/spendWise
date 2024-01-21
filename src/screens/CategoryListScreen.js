@@ -1,6 +1,14 @@
-import { Button, Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useContext } from "react";
+import {
+  Button,
+  Pressable,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
+import React, { useContext, useRef } from "react";
 import CustomButton from "../components/CustomButton";
+import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 
 // import { CategoryContext } from "../../store/category-context";
 
@@ -12,13 +20,16 @@ export default function CategoryListScreen({
   navigation,
   route,
   editTransaction,
+  onPressHandle,
 }) {
   // Filter the data based on the categoryType
   const filteredData = data.filter(
     (category) => category.categoryType === categoryType
   );
 
-  console.log("edit transaction di category list screen", editTransaction);
+  const sheetRef = useRef(null);
+
+  // console.log("edit transaction di category list screen", editTransaction);
 
   const renderCategory = (category, level = 0) => {
     return (
@@ -55,9 +66,10 @@ export default function CategoryListScreen({
     <View style={styles.listContainer}>
       <CustomButton
         label={"add new " + categoryType}
-        onPress={() =>
-          navigation.navigate("AddNewCategory", { categoryType: categoryType })
-        }
+        onPress={() => {
+          // sheetRef.current?.open();
+          navigation.navigate("AddNewCategory", { categoryType: categoryType });
+        }}
       />
       {filteredData.map((category) => {
         if (category.parentCategory) {
@@ -74,6 +86,19 @@ export default function CategoryListScreen({
         }
         return null;
       })}
+      <BottomSheet ref={sheetRef}>
+        <Text>Add New {categoryType}</Text>
+        <View style={styles.container}>
+          <TextInput
+            style={styles.input}
+            placeholder="category name"
+          ></TextInput>
+          <TextInput
+            style={styles.input}
+            placeholder="parent category"
+          ></TextInput>
+        </View>
+      </BottomSheet>
     </View>
   );
 }
@@ -84,7 +109,8 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     paddingHorizontal: 16,
     backgroundColor: "#dcdcdc",
-    marginHorizontal: 16,
+    // marginHorizontal: 16,
+    flex: 1,
   },
   categoryItem: {
     marginBottom: 12,
@@ -118,5 +144,13 @@ const styles = StyleSheet.create({
     height: 16,
     backgroundColor: "blue",
     borderRadius: 8,
+  },
+  input: {
+    flex: 1,
+    marginRight: 10,
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 8,
+    borderRadius: 5,
   },
 });

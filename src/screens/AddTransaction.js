@@ -24,21 +24,13 @@ const AddTransaction = ({ route, navigation }) => {
   const [date, setDate] = useState(dayjs().format("YYYY-MM-DD HH:mm"));
   const [sourceOfFund, setSourceOfFund] = useState("");
   const [transactionType, setTransactionType] = useState("");
-
-  //generate the ID
   const transactionId = uuidv4();
-  //date change handler
   const handleDateChange = (newDate) => {
     setDate(newDate);
   };
-  //panggil context transaction.
   const TransactionsCtx = useContext(TransactionContext);
-
   const editTransaction = route.params?.selectedTransaction;
-
   const selectedCategory = route.params?.selectedCategory;
-
-  console.log("transaction type> ", transactionType);
 
   useEffect(() => {
     if (!editTransaction) {
@@ -53,14 +45,11 @@ const AddTransaction = ({ route, navigation }) => {
       setNote(editTransaction.note);
       setSourceOfFund(editTransaction.sourceOfFund);
       setDate(editTransaction.date);
-
-      // Set category based on selectedCategory or editTransaction.category
       setCategory(
         selectedCategory
           ? selectedCategory.categoryName
           : editTransaction.category
       );
-
       setTransactionType(
         selectedCategory
           ? selectedCategory.categoryType
@@ -116,18 +105,6 @@ const AddTransaction = ({ route, navigation }) => {
         onChangeText={(text) => setAmount(text)}
       />
 
-      {/* <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Category"
-          value={category}
-          onChangeText={(text) => setCategory(text)}
-          // editable={false}
-        />
-
-        <Button title="List Categories" onPress={chooseCategoryHandler} />
-      </View> */}
-
       <Pressable style={styles.inputContainer} onPress={chooseCategoryHandler}>
         <Text style={styles.input}>
           {getCategoryText(editTransaction, selectedCategory)}
@@ -147,7 +124,6 @@ const AddTransaction = ({ route, navigation }) => {
       />
 
       <DatePicker value={date} onValueChange={handleDateChange} />
-      {/* <DatePicker value={date} onValueChange={(date) => setDate(date)} /> */}
       <Button title="Add Transaction" onPress={submitHandler} />
     </View>
   );

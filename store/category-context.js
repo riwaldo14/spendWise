@@ -6,13 +6,13 @@ export const CategoryContext = createContext({
     categoryName,
     categoryDescription,
     parentCategory,
-    CategoryType,
+    categoryType,
   }) => {},
   setCategory: (categories) => {},
   deleteCategory: (id) => {},
   updateCategory: (
     id,
-    { categoryName, categoryDescription, parentCategory }
+    { categoryName, categoryDescription, parentCategory, categoryType }
   ) => {},
 });
 

@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React, { useContext, useRef } from "react";
 import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
 import { NavigationContainer } from "@react-navigation/native";
 import CategoryListScreen from "./CategoryListScreen";
@@ -6,12 +6,17 @@ import { StyleSheet, Text, View } from "react-native";
 import CategoryContextProvider, {
   CategoryContext,
 } from "../../store/category-context";
+import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 
 export default function SelectCategoryScreen({ navigation, route }) {
-  // Create a Tab navigator
+  const CategoryCtx = useContext(CategoryContext);
+
   const Tab = createMaterialTopTabNavigator();
 
-  console.log("test passing params> ", route.params?.editTransaction);
+  // const sheetRef = useRef(null);
+  // function showButtomSheetHander() {
+  //   sheetRef.current?.open()
+  // }
 
   const ExpensesScreen = () => {
     return (
@@ -20,6 +25,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
         categoryType="Expense"
         navigation={navigation}
         editTransaction={route.params?.editTransaction}
+        // onPressHandle={showButtomSheetHander}
       />
     );
   };
@@ -45,12 +51,6 @@ export default function SelectCategoryScreen({ navigation, route }) {
       />
     );
   };
-
-  const CategoryCtx = useContext(CategoryContext);
-  // console.log(
-  //   "TransactionCtx dari Category List JSON>>>",
-  //   JSON.stringify(CategoryCtx.categories, null, 2)
-  // );
 
   return (
     <NavigationContainer independent={true}>
