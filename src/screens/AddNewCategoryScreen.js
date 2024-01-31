@@ -5,45 +5,66 @@ import CustomButton from "../components/CustomButton";
 import BottomSheet, { BottomSheetMethods } from "@devvie/bottom-sheet";
 import { CategoryContext } from "../../store/category-context";
 
-export default function AddNewCategoryScreen({ route }) {
-  const categoryCtx = useContext(CategoryContext);
-  const newCategoryType = route.params?.categoryType;
-
+export default function AddNewCategoryScreen({ route, navigation }) {
+  const CategoryCtx = useContext(CategoryContext);
+  const categoryType = route.params?.categoryType;
   const sheetRef = useRef(null);
-  const [selectedParentCategory, setSelectedParentCategory] = useState(null);
+  const [parentCategory, setParentCategory] = useState(null);
+  const [categoryName, setCategoryName] = useState("");
 
-  console.log(newCategoryType);
+  const categoryId = CategoryCtx.categories.length + 1;
+
+  // console.log(categoryName);
 
   function selectParentCategoryHandler() {
-    console.log("test> ");
+    // console.log("test> ");
     sheetRef.current.open();
   }
 
   function handleCategorySelection(category) {
-    setSelectedParentCategory(category);
+    console.log("log category", category.categoryName);
+    setParentCategory(category.categoryName);
     sheetRef.current.close();
+  }
+
+  function submitNewCategoryHandler() {
+    const categoryData = {
+      categoryName,
+      parentCategory,
+      categoryType,
+    };
+
+    CategoryCtx.addCategory(categoryData);
+    // console.log("category Data", categoryData);
+    // console.log(JSON.stringify(CategoryCtx.categories, null, 2));
+    navigation.goBack();
   }
 
   return (
     <View style={styles.container}>
-      <Text>Add new {newCategoryType} Category </Text>
-      <InputField placeholder={"Category Name"} />
+      <Text>Add new {categoryType} Category </Text>
+      <InputField
+        placeholder={"Category Name"}
+        value={categoryName}
+        onChangeText={(text) => setCategoryName(text)}
+      />
       <Pressable
         style={styles.inputContainer}
         onPress={selectParentCategoryHandler}
       >
         <Text style={styles.input}>
-          {selectedParentCategory
-            ? selectedParentCategory.categoryName
-            : "Select parent category"}
+          {parentCategory ? parentCategory : "Select parent category"}
         </Text>
       </Pressable>
       <CustomButton
-        onPress={() => {
-          console.log("saved");
-        }}
+        onPress={submitNewCategoryHandler}
         label={"Save Category"}
       />
+      <Text>
+        {CategoryCtx.categories.map((category) => {
+          category.categoryName;
+        })}
+      </Text>
 
       <BottomSheet
         ref={sheetRef}
@@ -51,11 +72,12 @@ export default function AddNewCategoryScreen({ route }) {
         openDuration={"800"}
         closeDuration={"300"}
       >
-        {categoryCtx.categories
+        {CategoryCtx.categories
           .filter(
             (category) =>
               category.parentCategory === null &&
-              category.categoryType === newCategoryType
+              category.categoryType === categoryType
+            // category.categoryName
           )
           .map((category) => (
             <Pressable

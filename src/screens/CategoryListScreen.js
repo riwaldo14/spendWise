@@ -18,9 +18,7 @@ export default function CategoryListScreen({
   data,
   categoryType,
   navigation,
-  route,
   editTransaction,
-  onPressHandle,
 }) {
   // Filter the data based on the categoryType
   const filteredData = data.filter(
@@ -28,8 +26,6 @@ export default function CategoryListScreen({
   );
 
   const sheetRef = useRef(null);
-
-  // console.log("edit transaction di category list screen", editTransaction);
 
   const renderCategory = (category, level = 0) => {
     return (

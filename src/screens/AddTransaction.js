@@ -96,6 +96,12 @@ const AddTransaction = ({ route, navigation }) => {
     });
   }
 
+  function chooseSofHandler() {
+    navigation.navigate("SelectSourceOfFund", {
+      editTransaction: editTransaction,
+    });
+  }
+
   return (
     <View style={styles.container}>
       <InputField
@@ -122,6 +128,9 @@ const AddTransaction = ({ route, navigation }) => {
         value={sourceOfFund}
         onChangeText={(text) => setSourceOfFund(text)}
       />
+      <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
+        <Text style={styles.input}>Pilih source of fun</Text>
+      </Pressable>
 
       <DatePicker value={date} onValueChange={handleDateChange} />
       <Button title="Add Transaction" onPress={submitHandler} />

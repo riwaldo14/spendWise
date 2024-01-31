@@ -13,10 +13,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
 
   const Tab = createMaterialTopTabNavigator();
 
-  // const sheetRef = useRef(null);
-  // function showButtomSheetHander() {
-  //   sheetRef.current?.open()
-  // }
+  const editTrx = route.params?.editTransaction;
 
   const ExpensesScreen = () => {
     return (
@@ -24,8 +21,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
         data={CategoryCtx.categories}
         categoryType="Expense"
         navigation={navigation}
-        editTransaction={route.params?.editTransaction}
-        // onPressHandle={showButtomSheetHander}
+        editTransaction={editTrx}
       />
     );
   };
@@ -36,7 +32,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
         data={CategoryCtx.categories}
         categoryType="Income"
         navigation={navigation}
-        editTransaction={route.params?.editTransaction}
+        editTransaction={editTrx}
       />
     );
   };
@@ -47,7 +43,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
         data={CategoryCtx.categories}
         categoryType="Debt/Loan"
         navigation={navigation}
-        editTransaction={route.params?.editTransaction}
+        editTransaction={editTrx}
       />
     );
   };

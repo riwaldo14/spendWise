@@ -1,25 +1,73 @@
 import { createContext, useReducer, useState } from "react";
 
+const INITIAL_CATEGORIES = [
+  {
+    id: "1",
+    categoryName: "Food",
+    parentCategory: null,
+    categoryType: "Expense",
+  },
+  {
+    id: "2",
+    categoryName: "Groceries",
+    parentCategory: null,
+    categoryType: "Expense",
+  },
+  {
+    id: "3",
+    categoryName: "Meals",
+    parentCategory: "Food",
+    categoryType: "Expense",
+  },
+  {
+    id: "4",
+    categoryName: "Service",
+    parentCategory: null,
+    categoryType: "Expense",
+  },
+
+  {
+    id: "5",
+    categoryName: "Salary",
+    parentCategory: null,
+    categoryType: "Income",
+  },
+
+  {
+    id: "6",
+    categoryName: "Bonus",
+    parentCategory: "Salary",
+    categoryType: "Income",
+  },
+  {
+    id: "7",
+    categoryName: "Dining Out",
+    parentCategory: "Food",
+    categoryType: "Expense",
+  },
+  {
+    id: "8",
+    categoryName: "Makan",
+    parentCategory: "Food",
+    categoryType: "Expense",
+  },
+  //food category
+  // Add more initial categories as needed
+];
+
 export const CategoryContext = createContext({
   categories: [],
-  addCategory: ({
-    categoryName,
-    categoryDescription,
-    parentCategory,
-    categoryType,
-  }) => {},
+  addCategory: ({ categoryName, parentCategory, categoryType }) => {},
   setCategory: (categories) => {},
   deleteCategory: (id) => {},
-  updateCategory: (
-    id,
-    { categoryName, categoryDescription, parentCategory, categoryType }
-  ) => {},
+  updateCategory: (id, { categoryName, parentCategory, categoryType }) => {},
 });
 
 function categoriesReducer(state, action) {
   switch (action.type) {
     case "ADD":
-      return [action.payload, ...state];
+      const id = new Date().toString() + Math.random().toString();
+      return [{ id: id, ...action.payload }, ...state];
     case "SET":
       return action.payload;
     case "DELETE":
@@ -30,69 +78,13 @@ function categoriesReducer(state, action) {
 }
 
 export default function CategoryContextProvider({ children }) {
-  const initialCategories = [
-    //food category
-    {
-      id: "1",
-      categoryName: "Food",
-      categoryDescription: "Expenses related to food",
-      parentCategory: null,
-      categoryType: "Expense",
-    },
-    {
-      id: "2",
-      categoryName: "Groceries",
-      categoryDescription: "Expenses on household essentials",
-      parentCategory: "Food",
-      categoryType: "Expense",
-    },
-    {
-      id: "3",
-      categoryName: "Meals",
-      categoryDescription: "Expenses on household essentials",
-      parentCategory: "Food",
-      categoryType: "Expense",
-    },
-    {
-      id: "4",
-      categoryName: "Service",
-      categoryDescription: "Expenses on household essentials",
-      parentCategory: null,
-      categoryType: "Expense",
-    },
-
-    {
-      id: "5",
-      categoryName: "Salary",
-      categoryDescription: "Monthly income",
-      parentCategory: null,
-      categoryType: "Income",
-    },
-
-    {
-      id: "6",
-      categoryName: "Bonus",
-      categoryDescription: "Year-end bonus",
-      parentCategory: "Salary",
-      categoryType: "Income",
-    },
-    {
-      id: "7",
-      categoryName: "Dining Out",
-      categoryDescription: "Expenses on eating out",
-      parentCategory: "1",
-      categoryType: "Expense",
-    },
-    // Add more initial categories as needed
-  ];
-
   const [categoriesState, dispatch] = useReducer(
     categoriesReducer,
-    initialCategories
+    INITIAL_CATEGORIES
   );
 
-  function addCategory(categoryData) {
-    dispatch({ type: "ADD", payload: categoryData });
+  function addCategory(category) {
+    dispatch({ type: "ADD", payload: category });
   }
 
   function setCategory(categories) {

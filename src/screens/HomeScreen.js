@@ -9,14 +9,11 @@ import { TransactionContext } from "../../store/transaction-context";
 
 export default function HomeScreen() {
   const TransactionsCtx = useContext(TransactionContext);
-  console.log(
-    "TransactionCtx dari HomeScreen>>>" + TransactionsCtx.transactions
-  );
 
-  console.log(
-    "TransactionCtx dari HomeScreen JSON>>>",
-    JSON.stringify(TransactionsCtx.transactions, null, 2)
-  );
+  // console.log(
+  //   "TransactionCtx dari HomeScreen JSON>>>",
+  //   JSON.stringify(TransactionsCtx.transactions, null, 2)
+  // );
   return (
     <View>
       <SummaryCard />

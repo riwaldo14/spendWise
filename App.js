@@ -18,6 +18,8 @@ import CategoryListScreen from "./src/screens/CategoryListScreen";
 import SelectCategoryScreen from "./src/screens/SelectCategoryScreen";
 import CategoryContextProvider from "./store/category-context";
 import AddNewCategoryScreen from "./src/screens/AddNewCategoryScreen";
+import SelectSourceOfFundScreen from "./src/screens/SelectSourceOfFundScreen";
+import AccountContextProvider from "./store/account-context";
 
 const Stack = createNativeStackNavigator();
 
@@ -122,22 +124,31 @@ export default function App() {
   return (
     <TransactionContextProvider>
       <CategoryContextProvider>
-        <NavigationContainer>
-          <Stack.Navigator>
-            <Stack.Screen name="MainPage" component={MainPage} />
-            <Stack.Screen name="AddTransaction" component={AddTransaction} />
-            <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
-            <Stack.Screen name="CategoryList" component={CategoryListScreen} />
-            <Stack.Screen
-              name="SelectCategory"
-              component={SelectCategoryScreen}
-            />
-            <Stack.Screen
-              name="AddNewCategory"
-              component={AddNewCategoryScreen}
-            />
-          </Stack.Navigator>
-        </NavigationContainer>
+        <AccountContextProvider>
+          <NavigationContainer>
+            <Stack.Navigator>
+              <Stack.Screen name="MainPage" component={MainPage} />
+              <Stack.Screen name="AddTransaction" component={AddTransaction} />
+              <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+              <Stack.Screen
+                name="CategoryList"
+                component={CategoryListScreen}
+              />
+              <Stack.Screen
+                name="SelectCategory"
+                component={SelectCategoryScreen}
+              />
+              <Stack.Screen
+                name="AddNewCategory"
+                component={AddNewCategoryScreen}
+              />
+              <Stack.Screen
+                name="SelectSourceOfFund"
+                component={SelectSourceOfFundScreen}
+              />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </AccountContextProvider>
       </CategoryContextProvider>
     </TransactionContextProvider>
   );
