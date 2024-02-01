@@ -14,6 +14,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
   const Tab = createMaterialTopTabNavigator();
 
   const editTrx = route.params?.editTransaction;
+  const selectedAcc = route.params?.selectedAccount;
 
   const ExpensesScreen = () => {
     return (
@@ -22,6 +23,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
         categoryType="Expense"
         navigation={navigation}
         editTransaction={editTrx}
+        account={selectedAcc}
       />
     );
   };
@@ -33,6 +35,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
         categoryType="Income"
         navigation={navigation}
         editTransaction={editTrx}
+        account={selectedAcc}
       />
     );
   };
@@ -44,6 +47,7 @@ export default function SelectCategoryScreen({ navigation, route }) {
         categoryType="Debt/Loan"
         navigation={navigation}
         editTransaction={editTrx}
+        account={selectedAcc}
       />
     );
   };

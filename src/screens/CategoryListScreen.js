@@ -19,6 +19,7 @@ export default function CategoryListScreen({
   categoryType,
   navigation,
   editTransaction,
+  account,
 }) {
   // Filter the data based on the categoryType
   const filteredData = data.filter(
@@ -35,6 +36,7 @@ export default function CategoryListScreen({
           navigation.navigate("AddTransaction", {
             selectedCategory: category,
             selectedTransaction: editTransaction,
+            selectedAccount: account,
           });
         }}
       >

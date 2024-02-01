@@ -31,6 +31,12 @@ const AddTransaction = ({ route, navigation }) => {
   const TransactionsCtx = useContext(TransactionContext);
   const editTransaction = route.params?.selectedTransaction;
   const selectedCategory = route.params?.selectedCategory;
+  const selectedAccount = route.params?.selectedAccount;
+
+  // console.log("=====");
+  // console.log("params selected account > " + selectedAccount);
+  // console.log("params edit transaction > " + editTransaction);
+  // console.log("params category > " + selectedCategory);
 
   useEffect(() => {
     if (!editTransaction) {
@@ -39,11 +45,14 @@ const AddTransaction = ({ route, navigation }) => {
         setCategory(selectedCategory.categoryName);
         setTransactionType(selectedCategory.categoryType);
       }
+      if (selectedAccount) {
+        setSourceOfFund(selectedAccount);
+      }
     } else {
       // Case 2: Edit transaction
       setAmount(editTransaction.amount);
       setNote(editTransaction.note);
-      setSourceOfFund(editTransaction.sourceOfFund);
+      // setSourceOfFund(editTransaction.sourceOfFund);
       setDate(editTransaction.date);
       setCategory(
         selectedCategory
@@ -55,8 +64,11 @@ const AddTransaction = ({ route, navigation }) => {
           ? selectedCategory.categoryType
           : editTransaction.transactionType
       );
+      setSourceOfFund(
+        selectedAccount ? selectedAccount : editTransaction.sourceOfFund
+      );
     }
-  }, [editTransaction, selectedCategory]);
+  }, [editTransaction, selectedCategory, selectedAccount]);
 
   const getCategoryText = (editTransaction, selectedCategory) => {
     if (!editTransaction) {
@@ -93,12 +105,14 @@ const AddTransaction = ({ route, navigation }) => {
   function chooseCategoryHandler() {
     navigation.navigate("SelectCategory", {
       editTransaction: editTransaction,
+      selectedAccount: selectedAccount,
     });
   }
 
   function chooseSofHandler() {
     navigation.navigate("SelectSourceOfFund", {
       editTransaction: editTransaction,
+      selectedCategory: selectedCategory,
     });
   }
 
@@ -123,13 +137,13 @@ const AddTransaction = ({ route, navigation }) => {
         onChangeText={(text) => setNote(text)}
       />
 
-      <InputField
+      {/* <InputField
         placeholder="Source of Fund"
         value={sourceOfFund}
         onChangeText={(text) => setSourceOfFund(text)}
-      />
+      /> */}
       <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
-        <Text style={styles.input}>Pilih source of fun</Text>
+        <Text style={styles.input}>{sourceOfFund}</Text>
       </Pressable>
 
       <DatePicker value={date} onValueChange={handleDateChange} />
