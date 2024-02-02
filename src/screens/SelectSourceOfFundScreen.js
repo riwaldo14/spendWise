@@ -28,7 +28,9 @@ export default function SelectSourceOfFundScreen({ route, navigation }) {
             onPress={() => selectAccountHandler(account.accountName)}
           >
             <Text>{account.accountName}</Text>
-            <Text>amount {account.balance ? account.balance : "Rp0"}</Text>
+            <Text>
+              amount {account.initialBalance ? account.initialBalance : "Rp0"}
+            </Text>
           </Pressable>
         ))}
       </View>

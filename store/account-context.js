@@ -4,12 +4,12 @@ const INITIAL_ACCOUNTS = [
   {
     id: "1",
     accountName: "Wallet",
-    balance: "Rp1000",
+    initialBalance: "Rp1000",
   },
   {
     id: "2",
     accountName: "Debit Card",
-    balance: null,
+    initialBalance: null,
   },
 ];
 
