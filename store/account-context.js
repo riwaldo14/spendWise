@@ -15,10 +15,10 @@ const INITIAL_ACCOUNTS = [
 
 export const AccountContext = createContext({
   accounts: [],
-  addAccount: ({ accountName, parentAccount, accountType }) => {},
+  addAccount: ({ accountName, initialBalance }) => {},
   setAccount: (accounts) => {},
   deleteAccount: (id) => {},
-  updateAccount: (id, { accountName, parentAccount, accountType }) => {},
+  updateAccount: (id, { accountName, initialBalance }) => {},
 });
 
 function accountsReducer(state, action) {

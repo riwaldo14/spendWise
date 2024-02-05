@@ -20,13 +20,18 @@ import CategoryContextProvider from "./store/category-context";
 import AddNewCategoryScreen from "./src/screens/AddNewCategoryScreen";
 import SelectSourceOfFundScreen from "./src/screens/SelectSourceOfFundScreen";
 import AccountContextProvider from "./store/account-context";
+import AddNewSourceOfFundScreen from "./src/screens/AddNewSourceOfFundScreen";
 
 const Stack = createNativeStackNavigator();
 
 function HomeStackScreen() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen
+        name="Home"
+        component={HomeScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
@@ -34,7 +39,11 @@ function HomeStackScreen() {
 function ReportStackScreen() {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Reports" component={ReportScreen} />
+      <Stack.Screen
+        name="Reports"
+        component={ReportScreen}
+        options={{ headerShown: false }}
+      />
     </Stack.Navigator>
   );
 }
@@ -127,7 +136,11 @@ export default function App() {
         <AccountContextProvider>
           <NavigationContainer>
             <Stack.Navigator>
-              <Stack.Screen name="MainPage" component={MainPage} />
+              <Stack.Screen
+                name="MainPage"
+                component={MainPage}
+                options={{ headerShown: false }}
+              />
               <Stack.Screen name="AddTransaction" component={AddTransaction} />
               <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
               <Stack.Screen
@@ -145,6 +158,10 @@ export default function App() {
               <Stack.Screen
                 name="SelectSourceOfFund"
                 component={SelectSourceOfFundScreen}
+              />
+              <Stack.Screen
+                name="AddNewSourceOfFund"
+                component={AddNewSourceOfFundScreen}
               />
             </Stack.Navigator>
           </NavigationContainer>

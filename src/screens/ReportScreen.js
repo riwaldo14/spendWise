@@ -59,6 +59,7 @@ export default function ReportScreen() {
     </View>
   );
 }
+``;
 
 const styles = StyleSheet.create({
   box: {

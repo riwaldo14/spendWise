@@ -1,12 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  View,
-  TextInput,
-  Button,
-  StyleSheet,
-  Pressable,
-  Text,
-} from "react-native";
+import { View, Button, StyleSheet, Pressable, Text } from "react-native";
 import dayjs from "dayjs";
 
 import { v4 as uuidv4 } from "uuid";
@@ -82,6 +75,14 @@ const AddTransaction = ({ route, navigation }) => {
     }
   };
 
+  const getSofText = (editTransaction, selectedAccount) => {
+    if (!editTransaction) {
+      return selectedAccount ? selectedAccount : "pick account";
+    } else {
+      return selectedAccount ? selectedAccount : editTransaction.sourceOfFund;
+    }
+  };
+
   function submitHandler() {
     const transactionData = {
       amount,
@@ -143,7 +144,9 @@ const AddTransaction = ({ route, navigation }) => {
         onChangeText={(text) => setSourceOfFund(text)}
       /> */}
       <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
-        <Text style={styles.input}>{sourceOfFund}</Text>
+        <Text style={styles.input}>
+          {getSofText(editTransaction, selectedAccount)}
+        </Text>
       </Pressable>
 
       <DatePicker value={date} onValueChange={handleDateChange} />

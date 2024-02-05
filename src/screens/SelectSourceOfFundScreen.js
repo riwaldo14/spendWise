@@ -1,6 +1,7 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import React, { useContext } from "react";
 import { AccountContext } from "../../store/account-context";
+import CustomButton from "../components/CustomButton";
 
 export default function SelectSourceOfFundScreen({ route, navigation }) {
   const SelectedTrx = route.params?.editTransaction;
@@ -17,10 +18,15 @@ export default function SelectSourceOfFundScreen({ route, navigation }) {
     });
   }
 
+  function addNewSofHandler() {
+    navigation.navigate("AddNewSourceOfFund");
+  }
+
   return (
     <View>
       <Text>SelectSourceOfFundScreen</Text>
       <View style={styles.inputContainer}>
+        <CustomButton label={"add new wallet"} onPress={addNewSofHandler} />
         {accountCtx.accounts.map((account) => (
           <Pressable
             key={account.id}

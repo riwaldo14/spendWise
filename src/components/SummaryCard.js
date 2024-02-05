@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 import { TransactionContext } from "../../store/transaction-context";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function SummaryCard() {
   const transactionCtx = useContext(TransactionContext);
@@ -26,15 +27,31 @@ export default function SummaryCard() {
   return (
     <View style={styles.container}>
       <View style={styles.column}>
-        <Text style={styles.label}>Total Income</Text>
-        <Text style={styles.value}>{totalIncome}</Text>
+        <View style={styles.innerContainer}>
+          <Text style={styles.label}>Total Expense</Text>
+          <View style={styles.iconContainer}>
+            <Ionicons
+              name="arrow-up-circle-outline"
+              color={"black"}
+              size={24}
+            />
+          </View>
+          <Text style={styles.value}>{totalExpense}</Text>
+        </View>
+        <View style={styles.innerContainer}>
+          <Text style={styles.label}>Total Income</Text>
+          <Ionicons
+            name="arrow-down-circle-outline"
+            color={"black"}
+            size={24}
+          />
+          <Text style={styles.value}>{totalIncome}</Text>
+        </View>
       </View>
-      <View style={styles.column}>
-        <Text style={styles.label}>Total Expense</Text>
-        <Text style={styles.value}>{totalExpense}</Text>
-      </View>
-      <View style={styles.column}>
+
+      <View style={styles.columnSaving}>
         <Text style={styles.label}>Savings</Text>
+        <Ionicons name="analytics-outline" color={"black"} size={24} />
         <Text style={styles.value}>{totalSaving}</Text>
       </View>
     </View>
@@ -45,22 +62,50 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    backgroundColor: "#ffffff",
+    backgroundColor: "#76ff94",
     borderRadius: 10,
-    padding: 16,
-    margin: 10,
+    gap: 12,
   },
   column: {
+    flex: 1.5,
+    alignItems: "flex-start",
+    // backgroundColor: "green",
+    borderColor: "green",
+    borderWidth: 1,
+    gap: 12,
+  },
+  columnSaving: {
     flex: 1,
+    borderColor: "red",
+    borderWidth: 1,
+    borderRadius: 18,
+    padding: 8,
+  },
+  innerContainer: {
+    borderColor: "red",
+    borderWidth: 1,
+    width: "100%",
+    borderRadius: 18,
+    padding: 8,
+    alignContent: "center",
+  },
+  iconContainer: {
+    backgroundColor: "yellow",
+    width: 24,
+    height: 24,
+    justifyContent: "center",
+    alignContent: "center",
     alignItems: "center",
   },
   label: {
-    fontSize: 16,
+    textAlign: "left",
+    fontSize: 14,
+    fontWeight: "bold",
     color: "#333",
     marginBottom: 5,
   },
   value: {
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: "bold",
     color: "#4CAF50",
   },

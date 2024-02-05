@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet } from "react-native";
 import React, { useContext } from "react";
 
 //Components Import
@@ -10,22 +10,32 @@ import { TransactionContext } from "../../store/transaction-context";
 export default function HomeScreen() {
   const TransactionsCtx = useContext(TransactionContext);
 
-  console.log(
-    "TransactionCtx dari HomeScreen JSON>>>",
-    JSON.stringify(TransactionsCtx.transactions, null, 2)
-  );
+  // console.log(
+  //   "TransactionCtx dari HomeScreen JSON>>>",
+  //   JSON.stringify(TransactionsCtx.transactions, null, 2)
+  // );
   return (
-    <View>
-      <SummaryCard />
-      <Text>Transaction List here ↓↓ </Text>
-      {TransactionsCtx.transactions.length === 0 ? (
-        <Text style={{ textAlign: "center", padding: 32 }}>
-          Empty State: No transactions available
-        </Text>
-      ) : (
-        <TransactionList transactions={TransactionsCtx.transactions} />
-      )}
-      {/* <TransactionList transactions={TransactionsCtx.transactions} /> */}
-    </View>
+    <SafeAreaView style={styles.rootContainer}>
+      <View>
+        <SummaryCard />
+        <Text>Transaction List here ↓↓ </Text>
+        {TransactionsCtx.transactions.length === 0 ? (
+          <Text style={{ textAlign: "center", padding: 32 }}>
+            Empty State: No transactions available
+          </Text>
+        ) : (
+          <TransactionList transactions={TransactionsCtx.transactions} />
+        )}
+        {/* <TransactionList transactions={TransactionsCtx.transactions} /> */}
+      </View>
+    </SafeAreaView>
   );
 }
+
+const styles = StyleSheet.create({
+  rootContainer: {
+    backgroundColor: "#d1d1d1",
+    flex: 1,
+    marginHorizontal: 16,
+  },
+});
