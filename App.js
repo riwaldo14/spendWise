@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Button, Pressable, Text, View } from "react-native";
+import { Button, Pressable, StyleSheet, Text, View } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -26,7 +26,7 @@ const Stack = createNativeStackNavigator();
 
 function HomeStackScreen() {
   return (
-    <Stack.Navigator>
+    <Stack.Navigator screenOptions={{}}>
       <Stack.Screen
         name="Home"
         component={HomeScreen}
@@ -134,40 +134,51 @@ export default function App() {
     <TransactionContextProvider>
       <CategoryContextProvider>
         <AccountContextProvider>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen
-                name="MainPage"
-                component={MainPage}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen name="AddTransaction" component={AddTransaction} />
-              <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
-              <Stack.Screen
-                name="CategoryList"
-                component={CategoryListScreen}
-              />
-              <Stack.Screen
-                name="SelectCategory"
-                component={SelectCategoryScreen}
-              />
-              <Stack.Screen
-                name="AddNewCategory"
-                component={AddNewCategoryScreen}
-              />
-              <Stack.Screen
-                name="SelectSourceOfFund"
-                component={SelectSourceOfFundScreen}
-              />
-              <Stack.Screen
-                name="AddNewSourceOfFund"
-                component={AddNewSourceOfFundScreen}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
+          <View style={styles.rootStyle}>
+            <NavigationContainer>
+              <Stack.Navigator>
+                <Stack.Screen
+                  name="MainPage"
+                  component={MainPage}
+                  options={{ headerShown: false }}
+                />
+                <Stack.Screen
+                  name="AddTransaction"
+                  component={AddTransaction}
+                />
+                <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
+                <Stack.Screen
+                  name="CategoryList"
+                  component={CategoryListScreen}
+                />
+                <Stack.Screen
+                  name="SelectCategory"
+                  component={SelectCategoryScreen}
+                />
+                <Stack.Screen
+                  name="AddNewCategory"
+                  component={AddNewCategoryScreen}
+                />
+                <Stack.Screen
+                  name="SelectSourceOfFund"
+                  component={SelectSourceOfFundScreen}
+                />
+                <Stack.Screen
+                  name="AddNewSourceOfFund"
+                  component={AddNewSourceOfFundScreen}
+                />
+              </Stack.Navigator>
+            </NavigationContainer>
+          </View>
         </AccountContextProvider>
       </CategoryContextProvider>
     </TransactionContextProvider>
   );
-  ``;
 }
+
+const styles = StyleSheet.create({
+  rootStyle: {
+    backgroundColor: "blue",
+    flex: 1,
+  },
+});

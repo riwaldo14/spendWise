@@ -2,6 +2,7 @@ import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import dayjs from "dayjs";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function TransactionItem({
   id,
@@ -22,15 +23,20 @@ export default function TransactionItem({
       <View style={styles.card}>
         <View style={styles.row}>
           <View style={styles.categoryIcon}>
-            {/* Insert Category Icon Here */}
+            <Ionicons
+              name="arrow-down-circle-outline"
+              color={"black"}
+              size={24}
+            />
           </View>
           <View style={styles.details}>
-            <Text style={styles.category}>{"CAT> " + category}</Text>
-            <Text style={styles.date}>{"SOF> " + sof}</Text>
-            <Text style={styles.date}>{"NOTE> " + note}</Text>
-            <Text style={styles.date}>{"DATE> " + date}</Text>
+            <Text style={styles.category}>{category}</Text>
+            <Text style={styles.date}>{sof}</Text>
           </View>
           <Text style={styles.amount}>{amount}</Text>
+        </View>
+        <View style={styles.noteContainer}>
+          <Text style={styles.note}>{note}</Text>
         </View>
       </View>
     </Pressable>
@@ -40,20 +46,17 @@ export default function TransactionItem({
 const styles = StyleSheet.create({
   card: {
     backgroundColor: "#fff",
-    borderRadius: 8,
-    margin: 10,
+    borderRadius: 16,
     overflow: "hidden",
-    elevation: 2,
-    flexDirection: "row",
+    flexDirection: "column",
     alignItems: "center",
+    padding: 16,
+    marginVertical: 8,
   },
   row: {
     flex: 1,
     flexDirection: "row",
     alignItems: "center",
-    padding: 16,
-    borderBottomWidth: 1,
-    borderBottomColor: "#eee",
   },
   categoryIcon: {
     width: 40,
@@ -71,7 +74,14 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
   },
-  date: {
+  noteContainer: {
+    marginTop: 8,
+    backgroundColor: "#eee",
+    padding: 8,
+    width: "100%",
+    borderRadius: 8,
+  },
+  note: {
     color: "#777",
   },
   amount: {

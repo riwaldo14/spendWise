@@ -29,30 +29,30 @@ export default function SummaryCard() {
       <View style={styles.column}>
         <View style={styles.innerContainer}>
           <Text style={styles.label}>Total Expense</Text>
-          <View style={styles.iconContainer}>
+          {/* <View style={styles.iconContainer}>
             <Ionicons
               name="arrow-up-circle-outline"
               color={"black"}
               size={24}
             />
-          </View>
-          <Text style={styles.value}>{totalExpense}</Text>
+          </View> */}
+          <Text style={styles.value}>{"Rp" + totalExpense}</Text>
         </View>
         <View style={styles.innerContainer}>
           <Text style={styles.label}>Total Income</Text>
-          <Ionicons
+          {/* <Ionicons
             name="arrow-down-circle-outline"
             color={"black"}
             size={24}
-          />
-          <Text style={styles.value}>{totalIncome}</Text>
+          /> */}
+          <Text style={styles.value}>{"Rp" + totalIncome}</Text>
         </View>
       </View>
 
       <View style={styles.columnSaving}>
-        <Text style={styles.label}>Savings</Text>
+        <Text style={styles.label}>Balance</Text>
         <Ionicons name="analytics-outline" color={"black"} size={24} />
-        <Text style={styles.value}>{totalSaving}</Text>
+        <Text style={styles.value}>{"Rp" + totalSaving}</Text>
       </View>
     </View>
   );
@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
   container: {
     flexDirection: "row",
     justifyContent: "space-evenly",
-    backgroundColor: "#76ff94",
+    // backgroundColor: "#76ff94",
     borderRadius: 10,
     gap: 12,
   },
@@ -70,20 +70,20 @@ const styles = StyleSheet.create({
     flex: 1.5,
     alignItems: "flex-start",
     // backgroundColor: "green",
-    borderColor: "green",
-    borderWidth: 1,
+    // borderColor: "green",
+    // borderWidth: 1,
     gap: 12,
   },
   columnSaving: {
     flex: 1,
-    borderColor: "red",
-    borderWidth: 1,
+    backgroundColor: "white",
+    // borderWidth: 1,
     borderRadius: 18,
     padding: 8,
   },
   innerContainer: {
-    borderColor: "red",
-    borderWidth: 1,
+    backgroundColor: "white",
+    // borderWidth: 1,
     width: "100%",
     borderRadius: 18,
     padding: 8,
