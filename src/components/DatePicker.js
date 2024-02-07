@@ -16,7 +16,7 @@ export default function DatePicker({ value, onValueChange }) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: "#F5FCFF",
+    // flex: 1,
+    backgroundColor: "#ffffff",
   },
 });

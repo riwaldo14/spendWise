@@ -36,7 +36,7 @@ export default function SummaryCard() {
               size={24}
             />
           </View> */}
-          <Text style={styles.value}>{"Rp" + totalExpense}</Text>
+          <Text style={styles.valueExpense}>{"Rp" + totalExpense}</Text>
         </View>
         <View style={styles.innerContainer}>
           <Text style={styles.label}>Total Income</Text>
@@ -45,14 +45,14 @@ export default function SummaryCard() {
             color={"black"}
             size={24}
           /> */}
-          <Text style={styles.value}>{"Rp" + totalIncome}</Text>
+          <Text style={styles.valueIncome}>{"Rp" + totalIncome}</Text>
         </View>
       </View>
 
       <View style={styles.columnSaving}>
         <Text style={styles.label}>Balance</Text>
         <Ionicons name="analytics-outline" color={"black"} size={24} />
-        <Text style={styles.value}>{"Rp" + totalSaving}</Text>
+        <Text style={styles.valueBalance}>{"Rp" + totalSaving}</Text>
       </View>
     </View>
   );
@@ -104,9 +104,19 @@ const styles = StyleSheet.create({
     color: "#333",
     marginBottom: 5,
   },
-  value: {
+  valueIncome: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#4CAF50",
+    color: "#43a346",
+  },
+  valueExpense: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#ff6c6c",
+  },
+  valueBalance: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: "#a389ff",
   },
 });

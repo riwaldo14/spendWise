@@ -1,5 +1,12 @@
-import React, { useContext, useEffect, useState } from "react";
-import { View, Button, StyleSheet, Pressable, Text } from "react-native";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import {
+  View,
+  Button,
+  StyleSheet,
+  Pressable,
+  Text,
+  TextInput,
+} from "react-native";
 import dayjs from "dayjs";
 
 import { v4 as uuidv4 } from "uuid";
@@ -8,6 +15,7 @@ import { v4 as uuidv4 } from "uuid";
 import DatePicker from "../components/DatePicker";
 import InputField from "../components/InputField";
 import { TransactionContext } from "../../store/transaction-context";
+import BottomSheet from "@devvie/bottom-sheet";
 
 const AddTransaction = ({ route, navigation }) => {
   // const [amount, setAmount] = useState("");
@@ -25,6 +33,12 @@ const AddTransaction = ({ route, navigation }) => {
   const editTransaction = route.params?.selectedTransaction;
   const selectedCategory = route.params?.selectedCategory;
   const selectedAccount = route.params?.selectedAccount;
+
+  const sheetRef = useRef(null);
+
+  function selectDateHandler() {
+    sheetRef.current.open();
+  }
 
   // console.log("=====");
   // console.log("params selected account > " + selectedAccount);
@@ -119,12 +133,13 @@ const AddTransaction = ({ route, navigation }) => {
 
   return (
     <View style={styles.container}>
-      <InputField
+      <TextInput placeholder="Rp0" style={styles.inputAmount} />
+      {/* <InputField
         placeholder={"Amount"}
         keyboardType={"numeric"}
         value={amount}
         onChangeText={(text) => setAmount(text)}
-      />
+      /> */}
 
       <Pressable style={styles.inputContainer} onPress={chooseCategoryHandler}>
         <Text style={styles.input}>
@@ -149,8 +164,28 @@ const AddTransaction = ({ route, navigation }) => {
         </Text>
       </Pressable>
 
-      <DatePicker value={date} onValueChange={handleDateChange} />
+      <Pressable style={styles.inputContainer} onPress={selectDateHandler}>
+        <Text style={styles.input}>choose date</Text>
+      </Pressable>
+
+      {/* <DatePicker value={date} onValueChange={handleDateChange} /> */}
+
       <Button title="Add Transaction" onPress={submitHandler} />
+      <BottomSheet
+        ref={sheetRef}
+        animationType="spring"
+        openDuration={"800"}
+        closeDuration={"300"}
+        height={"70%"}
+        // containerHeight={""}
+        // containerHeight={"100%"}
+        style={{ backgroundColor: "white" }}
+      >
+        <View style={styles.datePicker}>
+          <DatePicker value={date} onValueChange={handleDateChange} />
+          <Button title="Add Transaction" onPress={submitHandler} />
+        </View>
+      </BottomSheet>
     </View>
   );
 };
@@ -162,10 +197,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 20,
   },
+  inputAmount: {
+    fontSize: 32,
+    padding: 24,
+  },
 
   datePicker: {
-    width: "100%",
-    marginBottom: 10,
+    // flex: 1,
+    // height: "100%",
+    // width: "80%",
+    // marginBottom: 10,
   },
   inputContainer: {
     flexDirection: "row",

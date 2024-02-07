@@ -35,9 +35,17 @@ export default function TransactionItem({
           </View>
           <Text style={styles.amount}>{amount}</Text>
         </View>
-        <View style={styles.noteContainer}>
-          <Text style={styles.note}>{note}</Text>
-        </View>
+        {note !== "" ? (
+          <View style={styles.noteContainer}>
+            <Ionicons
+              name="document-text-outline"
+              color={"black"}
+              size={16}
+              style={{ marginRight: 4, color: "#777" }}
+            />
+            <Text style={styles.note}>{note}</Text>
+          </View>
+        ) : null}
       </View>
     </Pressable>
   );
@@ -51,7 +59,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     padding: 16,
-    marginVertical: 8,
+    marginTop: 8,
   },
   row: {
     flex: 1,
@@ -76,10 +84,12 @@ const styles = StyleSheet.create({
   },
   noteContainer: {
     marginTop: 8,
-    backgroundColor: "#eee",
+    backgroundColor: "#f4f4f4",
     padding: 8,
     width: "100%",
     borderRadius: 8,
+    flexDirection: "row",
+    alignItems: "center",
   },
   note: {
     color: "#777",
