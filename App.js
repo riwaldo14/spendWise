@@ -6,6 +6,9 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { Ionicons } from "@expo/vector-icons";
 
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+
 //Import Screens
 import AccountScreen from "./src/screens/AccountScreen";
 import BudgetScreen from "./src/screens/BudgetScreen";
@@ -135,40 +138,47 @@ export default function App() {
       <CategoryContextProvider>
         <AccountContextProvider>
           <View style={styles.rootStyle}>
-            <NavigationContainer>
-              <Stack.Navigator>
-                <Stack.Screen
-                  name="MainPage"
-                  component={MainPage}
-                  options={{ headerShown: false }}
-                />
-                <Stack.Screen
-                  name="AddTransaction"
-                  component={AddTransaction}
-                />
-                <Stack.Screen name="DetailsScreen" component={DetailsScreen} />
-                <Stack.Screen
-                  name="CategoryList"
-                  component={CategoryListScreen}
-                />
-                <Stack.Screen
-                  name="SelectCategory"
-                  component={SelectCategoryScreen}
-                />
-                <Stack.Screen
-                  name="AddNewCategory"
-                  component={AddNewCategoryScreen}
-                />
-                <Stack.Screen
-                  name="SelectSourceOfFund"
-                  component={SelectSourceOfFundScreen}
-                />
-                <Stack.Screen
-                  name="AddNewSourceOfFund"
-                  component={AddNewSourceOfFundScreen}
-                />
-              </Stack.Navigator>
-            </NavigationContainer>
+            <GestureHandlerRootView style={{ flex: 1 }}>
+              <BottomSheetModalProvider>
+                <NavigationContainer>
+                  <Stack.Navigator>
+                    <Stack.Screen
+                      name="MainPage"
+                      component={MainPage}
+                      options={{ headerShown: false }}
+                    />
+                    <Stack.Screen
+                      name="AddTransaction"
+                      component={AddTransaction}
+                    />
+                    <Stack.Screen
+                      name="DetailsScreen"
+                      component={DetailsScreen}
+                    />
+                    <Stack.Screen
+                      name="CategoryList"
+                      component={CategoryListScreen}
+                    />
+                    <Stack.Screen
+                      name="SelectCategory"
+                      component={SelectCategoryScreen}
+                    />
+                    <Stack.Screen
+                      name="AddNewCategory"
+                      component={AddNewCategoryScreen}
+                    />
+                    <Stack.Screen
+                      name="SelectSourceOfFund"
+                      component={SelectSourceOfFundScreen}
+                    />
+                    <Stack.Screen
+                      name="AddNewSourceOfFund"
+                      component={AddNewSourceOfFundScreen}
+                    />
+                  </Stack.Navigator>
+                </NavigationContainer>
+              </BottomSheetModalProvider>
+            </GestureHandlerRootView>
           </View>
         </AccountContextProvider>
       </CategoryContextProvider>

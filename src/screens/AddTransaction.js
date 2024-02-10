@@ -1,4 +1,11 @@
-import React, { useContext, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import {
   View,
   Button,
@@ -15,7 +22,8 @@ import { v4 as uuidv4 } from "uuid";
 import DatePicker from "../components/DatePicker";
 import InputField from "../components/InputField";
 import { TransactionContext } from "../../store/transaction-context";
-import BottomSheet from "@devvie/bottom-sheet";
+// import BottomSheet from "@devvie/bottom-sheet";
+import BottomSheet from "@gorhom/bottom-sheet";
 
 const AddTransaction = ({ route, navigation }) => {
   // const [amount, setAmount] = useState("");
@@ -26,8 +34,13 @@ const AddTransaction = ({ route, navigation }) => {
   const [sourceOfFund, setSourceOfFund] = useState("");
   const [transactionType, setTransactionType] = useState("");
   const transactionId = uuidv4();
+
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const [isBackdropVisible, setIsBackdropVisible] = useState(true);
+
   const handleDateChange = (newDate) => {
     setDate(newDate);
+    bottomSheetRef.current?.close();
   };
   const TransactionsCtx = useContext(TransactionContext);
   const editTransaction = route.params?.selectedTransaction;
@@ -89,11 +102,37 @@ const AddTransaction = ({ route, navigation }) => {
     }
   };
 
+  const getBackgroundColor = (editTransaction, selectedCategory) => {
+    if (!editTransaction) {
+      // Case 1: New transaction
+      return selectedCategory
+        ? getCategoryColor(selectedCategory.categoryType)
+        : "grey";
+    } else {
+      // Case 2: Edit transaction
+      return selectedCategory
+        ? getCategoryColor(selectedCategory.categoryType)
+        : getCategoryColor(editTransaction.categoryType);
+    }
+  };
+
+  const getCategoryColor = (categoryType) => {
+    return categoryType === "expense" ? "pink" : "green";
+  };
+
   const getSofText = (editTransaction, selectedAccount) => {
     if (!editTransaction) {
       return selectedAccount ? selectedAccount : "pick account";
     } else {
       return selectedAccount ? selectedAccount : editTransaction.sourceOfFund;
+    }
+  };
+
+  const getDateText = (editTransaction, date) => {
+    if (!editTransaction) {
+      return date ? date : "choose date";
+    } else {
+      return date ? date : editTransaction.date;
     }
   };
 
@@ -131,59 +170,68 @@ const AddTransaction = ({ route, navigation }) => {
     });
   }
 
+  const bottomSheetRef = React.useRef(null);
+
+  const handleSheetChanges = (index) => {
+    console.log("Sheet index:", index);
+    setIsBottomSheetOpen(index > 0);
+    setIsBackdropVisible(index > 0);
+  };
+
   return (
     <View style={styles.container}>
-      <TextInput placeholder="Rp0" style={styles.inputAmount} />
-      {/* <InputField
-        placeholder={"Amount"}
-        keyboardType={"numeric"}
-        value={amount}
-        onChangeText={(text) => setAmount(text)}
-      /> */}
+      <View style={styles.header}>
+        <TextInput
+          placeholder="Rp0"
+          style={styles.inputAmount}
+          keyboardType={"numeric"}
+          returnKeyType="done"
+          value={amount}
+          onChangeText={(text) => setAmount(text)}
+        />
+      </View>
 
-      <Pressable style={styles.inputContainer} onPress={chooseCategoryHandler}>
-        <Text style={styles.input}>
-          {getCategoryText(editTransaction, selectedCategory)}
-        </Text>
-      </Pressable>
+      <View style={styles.contentContainer}>
+        <Pressable
+          style={styles.inputContainer}
+          onPress={chooseCategoryHandler}
+        >
+          <Text style={styles.input}>
+            {getCategoryText(editTransaction, selectedCategory)}
+          </Text>
+        </Pressable>
 
-      <InputField
-        placeholder="Note"
-        value={note}
-        onChangeText={(text) => setNote(text)}
-      />
+        <InputField
+          placeholder="Note"
+          value={note}
+          onChangeText={(text) => setNote(text)}
+        />
+        <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
+          <Text style={styles.input}>
+            {getSofText(editTransaction, selectedAccount)}
+          </Text>
+        </Pressable>
 
-      {/* <InputField
-        placeholder="Source of Fund"
-        value={sourceOfFund}
-        onChangeText={(text) => setSourceOfFund(text)}
-      /> */}
-      <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
-        <Text style={styles.input}>
-          {getSofText(editTransaction, selectedAccount)}
-        </Text>
-      </Pressable>
+        <Pressable
+          style={styles.inputContainer}
+          onPress={() => bottomSheetRef.current?.expand()}
+        >
+          <Text style={styles.input}>{getDateText(editTransaction, date)}</Text>
+        </Pressable>
 
-      <Pressable style={styles.inputContainer} onPress={selectDateHandler}>
-        <Text style={styles.input}>choose date</Text>
-      </Pressable>
-
-      {/* <DatePicker value={date} onValueChange={handleDateChange} /> */}
-
-      <Button title="Add Transaction" onPress={submitHandler} />
+        <Button title="Add Transaction" onPress={submitHandler} />
+      </View>
       <BottomSheet
-        ref={sheetRef}
-        animationType="spring"
-        openDuration={"800"}
-        closeDuration={"300"}
-        height={"70%"}
-        // containerHeight={""}
-        // containerHeight={"100%"}
-        style={{ backgroundColor: "white" }}
+        ref={bottomSheetRef}
+        index={-1}
+        snapPoints={["40%", "62%"]}
+        // enableDynamicSizing
+        enablePanDownToClose
+        contentHeight={"100%"}
+        onChange={handleSheetChanges}
       >
-        <View style={styles.datePicker}>
+        <View style={styles.dateContainer}>
           <DatePicker value={date} onValueChange={handleDateChange} />
-          <Button title="Add Transaction" onPress={submitHandler} />
         </View>
       </BottomSheet>
     </View>
@@ -195,7 +243,27 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    padding: 20,
+    // backgroundColor: getBackgroundColor(editTransaction, selectedCategory),
+
+    backgroundColor: "pink",
+  },
+  header: {
+    flex: 1,
+    width: "100%",
+    height: "50%",
+    padding: 32,
+    alignItems: "center",
+    justifyContent: "center",
+    zIndex: 0,
+  },
+  contentContainer: {
+    backgroundColor: "white",
+    width: "100%",
+    padding: 24,
+    flex: 3,
+    borderRadius: 24,
+    borderColor: "black",
+    borderWidth: 2,
   },
   inputAmount: {
     fontSize: 32,
@@ -220,6 +288,10 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     padding: 8,
     borderRadius: 5,
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the opacity as needed
   },
 });
 
