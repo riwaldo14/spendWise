@@ -13,6 +13,7 @@ import {
   Pressable,
   Text,
   TextInput,
+  SafeAreaView,
 } from "react-native";
 import dayjs from "dayjs";
 
@@ -102,24 +103,6 @@ const AddTransaction = ({ route, navigation }) => {
     }
   };
 
-  const getBackgroundColor = (editTransaction, selectedCategory) => {
-    if (!editTransaction) {
-      // Case 1: New transaction
-      return selectedCategory
-        ? getCategoryColor(selectedCategory.categoryType)
-        : "grey";
-    } else {
-      // Case 2: Edit transaction
-      return selectedCategory
-        ? getCategoryColor(selectedCategory.categoryType)
-        : getCategoryColor(editTransaction.categoryType);
-    }
-  };
-
-  const getCategoryColor = (categoryType) => {
-    return categoryType === "expense" ? "pink" : "green";
-  };
-
   const getSofText = (editTransaction, selectedAccount) => {
     if (!editTransaction) {
       return selectedAccount ? selectedAccount : "pick account";
@@ -179,7 +162,21 @@ const AddTransaction = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView
+      style={{
+        ...styles.container,
+        backgroundColor:
+          selectedCategory && selectedCategory.categoryType === ""
+            ? "#d6d6d6"
+            : selectedCategory && selectedCategory.categoryType === "Expense"
+            ? "#ffc8c8"
+            : selectedCategory && selectedCategory.categoryType === "Income"
+            ? "#8fff8f"
+            : selectedCategory && selectedCategory.categoryType === "Transfer"
+            ? "#80f9ff"
+            : "#d6d6d6", //default background color
+      }}
+    >
       <View style={styles.header}>
         <TextInput
           placeholder="Rp0"
@@ -234,7 +231,7 @@ const AddTransaction = ({ route, navigation }) => {
           <DatePicker value={date} onValueChange={handleDateChange} />
         </View>
       </BottomSheet>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -244,8 +241,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     // backgroundColor: getBackgroundColor(editTransaction, selectedCategory),
-
-    backgroundColor: "pink",
   },
   header: {
     flex: 1,
@@ -261,7 +256,8 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 24,
     flex: 3,
-    borderRadius: 24,
+    borderTopLeftRadius: 24,
+    borderTopRightRadius: 24,
     borderColor: "black",
     borderWidth: 2,
   },

@@ -150,6 +150,7 @@ export default function App() {
                     <Stack.Screen
                       name="AddTransaction"
                       component={AddTransaction}
+                      options={{ headerShown: false }}
                     />
                     <Stack.Screen
                       name="DetailsScreen"
