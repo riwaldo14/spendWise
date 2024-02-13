@@ -25,6 +25,7 @@ import InputField from "../components/InputField";
 import { TransactionContext } from "../../store/transaction-context";
 // import BottomSheet from "@devvie/bottom-sheet";
 import BottomSheet from "@gorhom/bottom-sheet";
+import { Ionicons } from "@expo/vector-icons";
 
 const AddTransaction = ({ route, navigation }) => {
   // const [amount, setAmount] = useState("");
@@ -58,6 +59,7 @@ const AddTransaction = ({ route, navigation }) => {
   // console.log("params selected account > " + selectedAccount);
   // console.log("params edit transaction > " + editTransaction);
   // console.log("params category > " + selectedCategory);
+  // console.log(transactionType);
 
   useEffect(() => {
     if (!editTransaction) {
@@ -166,18 +168,22 @@ const AddTransaction = ({ route, navigation }) => {
       style={{
         ...styles.container,
         backgroundColor:
-          selectedCategory && selectedCategory.categoryType === ""
-            ? "#d6d6d6"
-            : selectedCategory && selectedCategory.categoryType === "Expense"
+          transactionType === "Expense"
             ? "#ffc8c8"
-            : selectedCategory && selectedCategory.categoryType === "Income"
+            : transactionType === "Income"
             ? "#8fff8f"
-            : selectedCategory && selectedCategory.categoryType === "Transfer"
+            : transactionType === "Transfer"
             ? "#80f9ff"
             : "#d6d6d6", //default background color
       }}
     >
       <View style={styles.header}>
+        <Pressable
+          style={styles.backButton}
+          onPress={() => navigation.goBack()}
+        >
+          <Ionicons name="chevron-back-outline" color={"black"} size={24} />
+        </Pressable>
         <TextInput
           placeholder="Rp0"
           style={styles.inputAmount}
@@ -240,19 +246,31 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    // backgroundColor: getBackgroundColor(editTransaction, selectedCategory),
   },
   header: {
     flex: 1,
+    backgroundColor: "blue",
     width: "100%",
-    height: "50%",
     padding: 32,
     alignItems: "center",
     justifyContent: "center",
-    zIndex: 0,
+  },
+  backButton: {
+    backgroundColor: "white",
+    height: 40,
+    width: 40,
+    borderRadius: 24,
+    position: "absolute",
+    left: 24,
+    top: 24,
+    alignItems: "center",
+    justifyContent: "center",
   },
   contentContainer: {
-    backgroundColor: "white",
+    // position: "absolute",
+    // bottom: 0,
+    // height: "75%",
+    backgroundColor: "yellow",
     width: "100%",
     padding: 24,
     flex: 3,
