@@ -37,9 +37,6 @@ const AddTransaction = ({ route, navigation }) => {
   const [transactionType, setTransactionType] = useState("");
   const transactionId = uuidv4();
 
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const [isBackdropVisible, setIsBackdropVisible] = useState(true);
-
   const handleDateChange = (newDate) => {
     setDate(newDate);
     bottomSheetRef.current?.close();
@@ -48,12 +45,6 @@ const AddTransaction = ({ route, navigation }) => {
   const editTransaction = route.params?.selectedTransaction;
   const selectedCategory = route.params?.selectedCategory;
   const selectedAccount = route.params?.selectedAccount;
-
-  const sheetRef = useRef(null);
-
-  function selectDateHandler() {
-    sheetRef.current.open();
-  }
 
   // console.log("=====");
   // console.log("params selected account > " + selectedAccount);
@@ -163,21 +154,29 @@ const AddTransaction = ({ route, navigation }) => {
     setIsBackdropVisible(index > 0);
   };
 
+  const backgroundColor =
+    transactionType === "Expense"
+      ? "#ffc8c8"
+      : transactionType === "Income"
+      ? "#8fff8f"
+      : transactionType === "Transfer"
+      ? "#80f9ff"
+      : "#d6d6d6";
+
   return (
-    <SafeAreaView
-      style={{
-        ...styles.container,
-        backgroundColor:
-          transactionType === "Expense"
-            ? "#ffc8c8"
-            : transactionType === "Income"
-            ? "#8fff8f"
-            : transactionType === "Transfer"
-            ? "#80f9ff"
-            : "#d6d6d6", //default background color
-      }}
-    >
-      <View style={styles.header}>
+    <>
+      <SafeAreaView
+        style={{
+          ...styles.container,
+          backgroundColor,
+        }}
+      ></SafeAreaView>
+      <View
+        style={{
+          ...styles.header,
+          backgroundColor,
+        }}
+      >
         <Pressable
           style={styles.backButton}
           onPress={() => navigation.goBack()}
@@ -185,6 +184,7 @@ const AddTransaction = ({ route, navigation }) => {
           <Ionicons name="chevron-back-outline" color={"black"} size={24} />
         </Pressable>
         <TextInput
+          autoFocus
           placeholder="Rp0"
           style={styles.inputAmount}
           keyboardType={"numeric"}
@@ -194,36 +194,46 @@ const AddTransaction = ({ route, navigation }) => {
         />
       </View>
 
-      <View style={styles.contentContainer}>
-        <Pressable
-          style={styles.inputContainer}
-          onPress={chooseCategoryHandler}
-        >
-          <Text style={styles.input}>
-            {getCategoryText(editTransaction, selectedCategory)}
-          </Text>
-        </Pressable>
+      <View
+        style={{
+          ...styles.outerContentContainer,
+          backgroundColor,
+        }}
+      >
+        <View style={{ ...styles.contentContainer }}>
+          <Pressable
+            style={styles.inputContainer}
+            onPress={chooseCategoryHandler}
+          >
+            <Text style={styles.input}>
+              {getCategoryText(editTransaction, selectedCategory)}
+            </Text>
+          </Pressable>
 
-        <InputField
-          placeholder="Note"
-          value={note}
-          onChangeText={(text) => setNote(text)}
-        />
-        <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
-          <Text style={styles.input}>
-            {getSofText(editTransaction, selectedAccount)}
-          </Text>
-        </Pressable>
+          <InputField
+            placeholder="Note"
+            value={note}
+            onChangeText={(text) => setNote(text)}
+          />
+          <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
+            <Text style={styles.input}>
+              {getSofText(editTransaction, selectedAccount)}
+            </Text>
+          </Pressable>
 
-        <Pressable
-          style={styles.inputContainer}
-          onPress={() => bottomSheetRef.current?.expand()}
-        >
-          <Text style={styles.input}>{getDateText(editTransaction, date)}</Text>
-        </Pressable>
+          <Pressable
+            style={styles.inputContainer}
+            onPress={() => bottomSheetRef.current?.expand()}
+          >
+            <Text style={styles.input}>
+              {getDateText(editTransaction, date)}
+            </Text>
+          </Pressable>
 
-        <Button title="Add Transaction" onPress={submitHandler} />
+          <Button title="Add Transaction" onPress={submitHandler} />
+        </View>
       </View>
+
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
@@ -233,27 +243,26 @@ const AddTransaction = ({ route, navigation }) => {
         contentHeight={"100%"}
         onChange={handleSheetChanges}
       >
-        <View style={styles.dateContainer}>
+        <View>
           <DatePicker value={date} onValueChange={handleDateChange} />
         </View>
       </BottomSheet>
-    </SafeAreaView>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   header: {
     flex: 1,
-    backgroundColor: "blue",
     width: "100%",
     padding: 32,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "blue",
   },
   backButton: {
     backgroundColor: "white",
@@ -270,14 +279,18 @@ const styles = StyleSheet.create({
     // position: "absolute",
     // bottom: 0,
     // height: "75%",
-    backgroundColor: "yellow",
+    backgroundColor: "white",
     width: "100%",
-    padding: 24,
     flex: 3,
+    padding: 24,
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     borderColor: "black",
     borderWidth: 2,
+  },
+  outerContentContainer: {
+    flex: 3,
+    backgroundColor: "blue",
   },
   inputAmount: {
     fontSize: 32,
@@ -302,10 +315,6 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     padding: 8,
     borderRadius: 5,
-  },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Adjust the opacity as needed
   },
 });
 
