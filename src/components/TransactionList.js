@@ -16,6 +16,7 @@ export default function TransactionList({ transactions }) {
             date={item.date}
             sof={item.sourceOfFund}
             note={item.note}
+            transactionType={item.transactionType}
           />
         );
       }}

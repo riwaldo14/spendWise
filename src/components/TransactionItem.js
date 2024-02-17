@@ -11,12 +11,26 @@ export default function TransactionItem({
   note,
   sof,
   date,
+  transactionType,
 }) {
   const navigation = useNavigation();
 
   function transactionItemPressHandler() {
     navigation.navigate("DetailsScreen", { transactionId: id });
   }
+
+  const formattedAmount =
+    transactionType === "Income"
+      ? "Rp" +
+        parseFloat(amount).toLocaleString("en-US", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 3,
+        })
+      : "-Rp" +
+        parseFloat(amount).toLocaleString("en-US", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 3,
+        });
 
   return (
     <Pressable onPress={transactionItemPressHandler}>
@@ -33,7 +47,7 @@ export default function TransactionItem({
             <Text style={styles.category}>{category}</Text>
             <Text style={styles.date}>{sof}</Text>
           </View>
-          <Text style={styles.amount}>{amount}</Text>
+          <Text style={styles.amount}>{formattedAmount}</Text>
         </View>
         {note !== "" ? (
           <View style={styles.noteContainer}>
@@ -95,7 +109,7 @@ const styles = StyleSheet.create({
     color: "#777",
   },
   amount: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#4CAF50",
   },

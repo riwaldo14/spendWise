@@ -14,6 +14,7 @@ import {
   Text,
   TextInput,
   SafeAreaView,
+  Animated,
 } from "react-native";
 import dayjs from "dayjs";
 
@@ -24,7 +25,10 @@ import DatePicker from "../components/DatePicker";
 import InputField from "../components/InputField";
 import { TransactionContext } from "../../store/transaction-context";
 // import BottomSheet from "@devvie/bottom-sheet";
-import BottomSheet from "@gorhom/bottom-sheet";
+import BottomSheet, {
+  BottomSheetBackdrop,
+  TouchableOpacity,
+} from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
 
 const AddTransaction = ({ route, navigation }) => {
@@ -37,6 +41,9 @@ const AddTransaction = ({ route, navigation }) => {
   const [transactionType, setTransactionType] = useState("");
   const transactionId = uuidv4();
 
+  const [activeTransaction, setActiveTransaction] = useState("Expense");
+  const translateX = useRef(new Animated.Value(0)).current;
+
   const handleDateChange = (newDate) => {
     setDate(newDate);
     bottomSheetRef.current?.close();
@@ -45,6 +52,12 @@ const AddTransaction = ({ route, navigation }) => {
   const editTransaction = route.params?.selectedTransaction;
   const selectedCategory = route.params?.selectedCategory;
   const selectedAccount = route.params?.selectedAccount;
+
+  const sheetRef = useRef(null);
+
+  function selectDateHandler() {
+    sheetRef.current.open();
+  }
 
   // console.log("=====");
   // console.log("params selected account > " + selectedAccount);
@@ -105,10 +118,14 @@ const AddTransaction = ({ route, navigation }) => {
   };
 
   const getDateText = (editTransaction, date) => {
+    const formattedDate = dayjs(date).format("DD MMMM YYYY");
+
     if (!editTransaction) {
-      return date ? date : "choose date";
+      return date ? formattedDate : "choose date";
     } else {
-      return date ? date : editTransaction.date;
+      return date
+        ? formattedDate
+        : dayjs(editTransaction.date).format("DD MMMM YYYY");
     }
   };
 
@@ -163,87 +180,115 @@ const AddTransaction = ({ route, navigation }) => {
       ? "#80f9ff"
       : "#d6d6d6";
 
+  const handleTransactionTypePress = (type) => {
+    setActiveTransaction(type);
+
+    // Move the background smoothly to the selected transaction type
+    Animated.spring(translateX, {
+      toValue: type === "Expense" ? 0 : type === "Income" ? 1 : 2,
+      useNativeDriver: false,
+    }).start();
+  };
+
   return (
     <>
+      {/* HEADER SECTION */}
       <SafeAreaView
         style={{
           ...styles.container,
           backgroundColor,
         }}
-      ></SafeAreaView>
-      <View
-        style={{
-          ...styles.header,
-          backgroundColor,
-        }}
       >
-        <Pressable
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Ionicons name="chevron-back-outline" color={"black"} size={24} />
-        </Pressable>
-        <TextInput
-          autoFocus
-          placeholder="Rp0"
-          style={styles.inputAmount}
-          keyboardType={"numeric"}
-          returnKeyType="done"
-          value={amount}
-          onChangeText={(text) => setAmount(text)}
-        />
-      </View>
-
-      <View
-        style={{
-          ...styles.outerContentContainer,
-          backgroundColor,
-        }}
-      >
-        <View style={{ ...styles.contentContainer }}>
+        <View style={{ ...styles.header, backgroundColor }}>
           <Pressable
-            style={styles.inputContainer}
-            onPress={chooseCategoryHandler}
+            style={styles.backButton}
+            onPress={() => navigation.goBack()}
           >
-            <Text style={styles.input}>
-              {getCategoryText(editTransaction, selectedCategory)}
-            </Text>
+            <Ionicons name="chevron-back-outline" color={"black"} size={24} />
           </Pressable>
-
-          <InputField
-            placeholder="Note"
-            value={note}
-            onChangeText={(text) => setNote(text)}
+          <TextInput
+            autoFocus
+            placeholder="Rp0"
+            style={styles.inputAmount}
+            keyboardType={"numeric"}
+            returnKeyType="done"
+            value={amount}
+            onChangeText={(text) => setAmount(text)}
           />
-          <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
-            <Text style={styles.input}>
-              {getSofText(editTransaction, selectedAccount)}
-            </Text>
-          </Pressable>
-
-          <Pressable
-            style={styles.inputContainer}
-            onPress={() => bottomSheetRef.current?.expand()}
-          >
-            <Text style={styles.input}>
-              {getDateText(editTransaction, date)}
-            </Text>
-          </Pressable>
-
-          <Button title="Add Transaction" onPress={submitHandler} />
         </View>
-      </View>
+      </SafeAreaView>
 
+      {/* INPUT FORM SECTION */}
+      <View style={styles.contentContainer}>
+        <View style={styles.transactionTypeContainer}>
+          <Pressable
+            style={[
+              styles.transactionType,
+              activeTransaction === "Expense" && styles.activeTransactionType,
+            ]}
+            onPress={() => handleTransactionTypePress("Expense")}
+          >
+            <Text>Expense</Text>
+          </Pressable>
+          <Pressable
+            style={[
+              styles.transactionType,
+              activeTransaction === "Income" && styles.activeTransactionType,
+            ]}
+            onPress={() => handleTransactionTypePress("Income")}
+          >
+            <Text>Income</Text>
+          </Pressable>
+          <Pressable
+            style={[
+              styles.transactionType,
+              activeTransaction === "Transfer" && styles.activeTransactionType,
+            ]}
+            onPress={() => handleTransactionTypePress("Transfer")}
+          >
+            <Text>Transfer</Text>
+          </Pressable>
+        </View>
+        <Pressable
+          style={styles.inputContainer}
+          onPress={chooseCategoryHandler}
+        >
+          <Text style={styles.input}>
+            {getCategoryText(editTransaction, selectedCategory)}
+          </Text>
+        </Pressable>
+
+        <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
+          <Text style={styles.input}>
+            {getSofText(editTransaction, selectedAccount)}
+          </Text>
+        </Pressable>
+
+        <InputField
+          placeholder="Note"
+          value={note}
+          onChangeText={(text) => setNote(text)}
+        />
+
+        <Pressable
+          style={styles.inputContainer}
+          onPress={() => bottomSheetRef.current?.expand()}
+        >
+          <Text style={styles.input}>{getDateText(editTransaction, date)}</Text>
+        </Pressable>
+
+        <Button title="Add Transaction" onPress={submitHandler} />
+      </View>
       <BottomSheet
         ref={bottomSheetRef}
         index={-1}
         snapPoints={["40%", "62%"]}
-        // enableDynamicSizing
         enablePanDownToClose
         contentHeight={"100%"}
         onChange={handleSheetChanges}
+        backdropComponent={BottomSheetBackdrop}
       >
-        <View>
+        <View style={styles.dateContainer}>
           <DatePicker value={date} onValueChange={handleDateChange} />
         </View>
       </BottomSheet>
@@ -253,16 +298,17 @@ const AddTransaction = ({ route, navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     justifyContent: "center",
     alignItems: "center",
   },
   header: {
     flex: 1,
+    backgroundColor: "blue",
     width: "100%",
     padding: 32,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "blue",
   },
   backButton: {
     backgroundColor: "white",
@@ -276,21 +322,10 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   contentContainer: {
-    // position: "absolute",
-    // bottom: 0,
-    // height: "75%",
     backgroundColor: "white",
     width: "100%",
-    flex: 3,
     padding: 24,
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    borderColor: "black",
-    borderWidth: 2,
-  },
-  outerContentContainer: {
-    flex: 3,
-    backgroundColor: "blue",
+    flex: 2,
   },
   inputAmount: {
     fontSize: 32,
@@ -310,11 +345,35 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    marginRight: 10,
     borderWidth: 1,
     borderColor: "#ccc",
+    padding: 16,
+    borderRadius: 16,
+  },
+
+  transactionTypeContainer: {
+    flexDirection: "row",
+    marginBottom: 20,
+    justifyContent: "space-between",
+    borderRadius: 24,
+    borderBlockColor: "black",
+    borderWidth: 1,
+    backgroundColor: "lightgrey", // Set the light grey background color
+  },
+  transactionType: {
+    flex: 1,
+    borderBlockColor: "black",
+    borderWidth: 1,
+    alignItems: "center",
+    alignContent: "center",
+    marginHorizontal: 8,
+    marginVertical: 8,
     padding: 8,
-    borderRadius: 5,
+    borderRadius: 16,
+    // backgroundColor: "white", // Set the default white background color
+  },
+  activeTransactionType: {
+    backgroundColor: "white", // Set the active white background color
   },
 });
 

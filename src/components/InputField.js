@@ -20,12 +20,12 @@ export default function InputField({
 
 const styles = StyleSheet.create({
   input: {
-    height: 40,
     width: "100%",
     borderColor: "gray",
     borderWidth: 1,
     marginBottom: 16,
     paddingHorizontal: 16,
     borderRadius: 16,
+    padding: 16,
   },
 });

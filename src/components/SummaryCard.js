@@ -24,6 +24,13 @@ export default function SummaryCard() {
 
   const totalSaving = totalIncome - totalExpense;
 
+  const totalExpenseFormatted = "Rp" + totalExpense.toLocaleString();
+  const totalIncomeFormatted = "Rp" + totalIncome.toLocaleString();
+  const totalSavingFormatted =
+    totalSaving >= 0
+      ? "Rp" + totalSaving.toLocaleString()
+      : "-Rp" + Math.abs(totalSaving).toLocaleString();
+
   return (
     <View style={styles.container}>
       <View style={styles.column}>
@@ -36,7 +43,7 @@ export default function SummaryCard() {
               size={24}
             />
           </View> */}
-          <Text style={styles.valueExpense}>{"Rp" + totalExpense}</Text>
+          <Text style={styles.valueExpense}>{totalExpenseFormatted}</Text>
         </View>
         <View style={styles.innerContainer}>
           <Text style={styles.label}>Total Income</Text>
@@ -45,14 +52,14 @@ export default function SummaryCard() {
             color={"black"}
             size={24}
           /> */}
-          <Text style={styles.valueIncome}>{"Rp" + totalIncome}</Text>
+          <Text style={styles.valueIncome}>{totalIncomeFormatted}</Text>
         </View>
       </View>
 
       <View style={styles.columnSaving}>
         <Text style={styles.label}>Balance</Text>
         <Ionicons name="analytics-outline" color={"black"} size={24} />
-        <Text style={styles.valueBalance}>{"Rp" + totalSaving}</Text>
+        <Text style={styles.valueBalance}>{totalSavingFormatted}</Text>
       </View>
     </View>
   );
@@ -105,17 +112,17 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   valueIncome: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#43a346",
   },
   valueExpense: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#ff6c6c",
   },
   valueBalance: {
-    fontSize: 20,
+    fontSize: 16,
     fontWeight: "bold",
     color: "#a389ff",
   },

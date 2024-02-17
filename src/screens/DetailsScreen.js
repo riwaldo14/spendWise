@@ -1,6 +1,7 @@
 import { View, Text, StyleSheet, Pressable } from "react-native";
 import { useContext } from "react";
 import { TransactionContext } from "../../store/transaction-context";
+import dayjs from "dayjs";
 
 export default function DetailsScreen({ route, navigation }) {
   const transactionCtx = useContext(TransactionContext);
@@ -22,6 +23,19 @@ export default function DetailsScreen({ route, navigation }) {
     });
   }
 
+  const formattedAmount =
+    selectedTransaction.transactionType === "Income"
+      ? "Rp" +
+        parseFloat(selectedTransaction.amount).toLocaleString("en-US", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 3,
+        })
+      : "-Rp" +
+        parseFloat(selectedTransaction.amount).toLocaleString("en-US", {
+          minimumFractionDigits: 0,
+          maximumFractionDigits: 3,
+        });
+
   return (
     <View style={styles.card}>
       <Text style={styles.title}>Details</Text>
@@ -29,7 +43,7 @@ export default function DetailsScreen({ route, navigation }) {
         <>
           <View style={styles.details}>
             <Text style={styles.label}>Amount:</Text>
-            <Text>{selectedTransaction.amount}</Text>
+            <Text>{formattedAmount}</Text>
           </View>
           <View style={styles.details}>
             <Text style={styles.label}>Category:</Text>
@@ -41,7 +55,9 @@ export default function DetailsScreen({ route, navigation }) {
           </View>
           <View style={styles.details}>
             <Text style={styles.label}>Date:</Text>
-            <Text>{selectedTransaction.date}</Text>
+            <Text>
+              {dayjs(selectedTransaction.date).format("DD MMMM YYYY")}
+            </Text>
           </View>
           <View style={styles.details}>
             <Text style={styles.label}>Source of Fund:</Text>

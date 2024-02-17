@@ -1,4 +1,4 @@
-import { View, Text, SafeAreaView, StyleSheet } from "react-native";
+import { View, Text, SafeAreaView, StyleSheet, Platform } from "react-native";
 import React, { useContext } from "react";
 
 //Components Import
@@ -15,9 +15,11 @@ export default function HomeScreen() {
   //   JSON.stringify(TransactionsCtx.transactions, null, 2)
   // );
   return (
-    <SafeAreaView style={styles.rootContainer}>
-      <View>
+    <>
+      <SafeAreaView style={styles.rootContainer}>
         <SummaryCard />
+      </SafeAreaView>
+      <View style={styles.listContainer}>
         <Text>Transaction List here ↓↓ </Text>
         {TransactionsCtx.transactions.length === 0 ? (
           <Text style={{ textAlign: "center", padding: 32 }}>
@@ -28,13 +30,17 @@ export default function HomeScreen() {
         )}
         {/* <TransactionList transactions={TransactionsCtx.transactions} /> */}
       </View>
-    </SafeAreaView>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   rootContainer: {
-    // backgroundColor: "white",
+    paddingTop: Platform.OS === "android" ? 40 : 0,
+    marginHorizontal: 16,
+    marginBottom: 16,
+  },
+  listContainer: {
     flex: 1,
     marginHorizontal: 16,
   },
