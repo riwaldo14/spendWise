@@ -30,6 +30,7 @@ import BottomSheet, {
   TouchableOpacity,
 } from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
+import { CategoryContext } from "../../store/category-context";
 
 const AddTransaction = ({ route, navigation }) => {
   // const [amount, setAmount] = useState("");
@@ -41,20 +42,24 @@ const AddTransaction = ({ route, navigation }) => {
   const [transactionType, setTransactionType] = useState("");
   const transactionId = uuidv4();
 
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [activeTransaction, setActiveTransaction] = useState("Expense");
-  const translateX = useRef(new Animated.Value(0)).current;
 
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-    bottomSheetRef.current?.close();
-  };
   const TransactionsCtx = useContext(TransactionContext);
+  const CategoryCtx = useContext(CategoryContext);
   const editTransaction = route.params?.selectedTransaction;
   const selectedCategory = route.params?.selectedCategory;
   const selectedAccount = route.params?.selectedAccount;
 
   const sheetRef = useRef(null);
 
+  const bottomSheetDateRef = useRef(null);
+  const bottomSheetCategoryRef = useRef(null);
+
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    bottomSheetDateRef.current?.close();
+  };
   function selectDateHandler() {
     sheetRef.current.open();
   }
@@ -163,13 +168,15 @@ const AddTransaction = ({ route, navigation }) => {
     });
   }
 
-  const bottomSheetRef = React.useRef(null);
-
   const handleSheetChanges = (index) => {
-    console.log("Sheet index:", index);
+    // console.log("Sheet index:", index);
     setIsBottomSheetOpen(index > 0);
-    setIsBackdropVisible(index > 0);
   };
+
+  const filteredCategory = CategoryCtx.categories.filter(
+    (category) => category.categoryType === activeTransaction
+  );
+  console.log("filtered category ", filteredCategory);
 
   const backgroundColor =
     transactionType === "Expense"
@@ -184,10 +191,6 @@ const AddTransaction = ({ route, navigation }) => {
     setActiveTransaction(type);
 
     // Move the background smoothly to the selected transaction type
-    Animated.spring(translateX, {
-      toValue: type === "Expense" ? 0 : type === "Income" ? 1 : 2,
-      useNativeDriver: false,
-    }).start();
   };
 
   return (
@@ -251,7 +254,8 @@ const AddTransaction = ({ route, navigation }) => {
         </View>
         <Pressable
           style={styles.inputContainer}
-          onPress={chooseCategoryHandler}
+          // onPress={chooseCategoryHandler}
+          onPress={() => bottomSheetCategoryRef.current?.expand()}
         >
           <Text style={styles.input}>
             {getCategoryText(editTransaction, selectedCategory)}
@@ -272,7 +276,7 @@ const AddTransaction = ({ route, navigation }) => {
 
         <Pressable
           style={styles.inputContainer}
-          onPress={() => bottomSheetRef.current?.expand()}
+          onPress={() => bottomSheetDateRef.current?.expand()}
         >
           <Text style={styles.input}>{getDateText(editTransaction, date)}</Text>
         </Pressable>
@@ -280,7 +284,7 @@ const AddTransaction = ({ route, navigation }) => {
         <Button title="Add Transaction" onPress={submitHandler} />
       </View>
       <BottomSheet
-        ref={bottomSheetRef}
+        ref={bottomSheetDateRef}
         index={-1}
         snapPoints={["40%", "62%"]}
         enablePanDownToClose
@@ -291,6 +295,28 @@ const AddTransaction = ({ route, navigation }) => {
         <View style={styles.dateContainer}>
           <DatePicker value={date} onValueChange={handleDateChange} />
         </View>
+      </BottomSheet>
+      <BottomSheet
+        ref={bottomSheetCategoryRef}
+        index={-1}
+        snapPoints={["40%", "62%"]}
+        enablePanDownToClose
+        contentHeight={"100%"}
+        onChange={handleSheetChanges}
+        backdropComponent={BottomSheetBackdrop}
+      >
+        <Text style={styles.bottomSheetTitle}>{activeTransaction}</Text>
+        {filteredCategory.map((category) => (
+          <Pressable
+            style={{ padding: 8 }}
+            key={category.id}
+            onPress={() => {
+              console.log(category.categoryName);
+            }}
+          >
+            <Text>{category.categoryName}</Text>
+          </Pressable>
+        ))}
       </BottomSheet>
     </>
   );
@@ -332,12 +358,6 @@ const styles = StyleSheet.create({
     padding: 24,
   },
 
-  datePicker: {
-    // flex: 1,
-    // height: "100%",
-    // width: "80%",
-    // marginBottom: 10,
-  },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -374,6 +394,10 @@ const styles = StyleSheet.create({
   },
   activeTransactionType: {
     backgroundColor: "white", // Set the active white background color
+  },
+  bottomSheetTitle: {
+    fontSize: 24,
+    marginBottom: 16,
   },
 });
 
