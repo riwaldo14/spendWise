@@ -1,11 +1,4 @@
-import React, {
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import {
   View,
   Button,
@@ -14,111 +7,63 @@ import {
   Text,
   TextInput,
   SafeAreaView,
-  Animated,
 } from "react-native";
 import dayjs from "dayjs";
-
 import { v4 as uuidv4 } from "uuid";
 
-//component import
+// Component import
 import DatePicker from "../components/DatePicker";
 import InputField from "../components/InputField";
 import { TransactionContext } from "../../store/transaction-context";
-// import BottomSheet from "@devvie/bottom-sheet";
-import BottomSheet, {
-  BottomSheetBackdrop,
-  TouchableOpacity,
-} from "@gorhom/bottom-sheet";
+import BottomSheet, { BottomSheetBackdrop } from "@gorhom/bottom-sheet";
 import { Ionicons } from "@expo/vector-icons";
 import { CategoryContext } from "../../store/category-context";
+import { AccountContext } from "../../store/account-context";
 
 const AddTransaction = ({ route, navigation }) => {
-  // const [amount, setAmount] = useState("");
+  const editTransaction = route.params?.selectedTransaction;
+
+  const transactionId = uuidv4();
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("");
   const [note, setNote] = useState("");
   const [date, setDate] = useState(dayjs().format("YYYY-MM-DD HH:mm"));
   const [sourceOfFund, setSourceOfFund] = useState("");
-  const [transactionType, setTransactionType] = useState("");
-  const transactionId = uuidv4();
-
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const [activeTransaction, setActiveTransaction] = useState("Expense");
+  const [transactionType, setTransactionType] = useState("Expense");
 
   const TransactionsCtx = useContext(TransactionContext);
   const CategoryCtx = useContext(CategoryContext);
-  const editTransaction = route.params?.selectedTransaction;
-  const selectedCategory = route.params?.selectedCategory;
-  const selectedAccount = route.params?.selectedAccount;
+  const AccountCtx = useContext(AccountContext);
 
-  const sheetRef = useRef(null);
-
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const bottomSheetDateRef = useRef(null);
   const bottomSheetCategoryRef = useRef(null);
-
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-    bottomSheetDateRef.current?.close();
-  };
-  function selectDateHandler() {
-    sheetRef.current.open();
-  }
-
-  // console.log("=====");
-  // console.log("params selected account > " + selectedAccount);
-  // console.log("params edit transaction > " + editTransaction);
-  // console.log("params category > " + selectedCategory);
-  // console.log(transactionType);
+  const bottomSheetSofRef = useRef(null);
 
   useEffect(() => {
-    if (!editTransaction) {
-      // Case 1: New transaction
-      if (selectedCategory) {
-        setCategory(selectedCategory.categoryName);
-        setTransactionType(selectedCategory.categoryType);
-      }
-      if (selectedAccount) {
-        setSourceOfFund(selectedAccount);
-      }
-    } else {
-      // Case 2: Edit transaction
+    if (editTransaction) {
       setAmount(editTransaction.amount);
       setNote(editTransaction.note);
-      // setSourceOfFund(editTransaction.sourceOfFund);
+      setSourceOfFund(editTransaction.sourceOfFund);
       setDate(editTransaction.date);
-      setCategory(
-        selectedCategory
-          ? selectedCategory.categoryName
-          : editTransaction.category
-      );
-      setTransactionType(
-        selectedCategory
-          ? selectedCategory.categoryType
-          : editTransaction.transactionType
-      );
-      setSourceOfFund(
-        selectedAccount ? selectedAccount : editTransaction.sourceOfFund
-      );
+      setCategory(editTransaction.category);
+      setTransactionType(editTransaction.transactionType);
     }
-  }, [editTransaction, selectedCategory, selectedAccount]);
+  }, [editTransaction]);
 
-  const getCategoryText = (editTransaction, selectedCategory) => {
+  const getCategoryText = (editTransaction) => {
     if (!editTransaction) {
-      // Case 1: New transaction
-      return selectedCategory ? selectedCategory.categoryName : "Pick category";
+      return category ? category : "Pick category";
     } else {
-      // Case 2: Edit transaction
-      return selectedCategory
-        ? selectedCategory.categoryName
-        : editTransaction.category;
+      return category ? category : editTransaction.category;
     }
   };
 
-  const getSofText = (editTransaction, selectedAccount) => {
+  const getSofText = (editTransaction) => {
     if (!editTransaction) {
-      return selectedAccount ? selectedAccount : "pick account";
+      return sourceOfFund ? sourceOfFund : "pick account";
     } else {
-      return selectedAccount ? selectedAccount : editTransaction.sourceOfFund;
+      return sourceOfFund ? sourceOfFund : editTransaction.sourceOfFund;
     }
   };
 
@@ -134,7 +79,34 @@ const AddTransaction = ({ route, navigation }) => {
     }
   };
 
-  function submitHandler() {
+  const handleDateChange = (newDate) => {
+    setDate(newDate);
+    bottomSheetDateRef.current?.close();
+  };
+
+  const handleSheetChanges = (index) => {
+    setIsBottomSheetOpen(index > 0);
+  };
+
+  const filteredCategory = CategoryCtx.categories.filter(
+    (category) => category.categoryType === transactionType
+  );
+
+  const backgroundColor = (trxType) => {
+    return trxType === "Expense"
+      ? "#ffc8c8"
+      : trxType === "Income"
+      ? "#8fff8f"
+      : trxType === "Transfer"
+      ? "#80f9ff"
+      : "#d6d6d6";
+  };
+
+  const handleTransactionTypePress = (type) => {
+    setTransactionType(type);
+  };
+
+  const submitHandler = () => {
     const transactionData = {
       amount,
       category,
@@ -152,45 +124,6 @@ const AddTransaction = ({ route, navigation }) => {
     }
 
     navigation.goBack();
-  }
-
-  function chooseCategoryHandler() {
-    navigation.navigate("SelectCategory", {
-      editTransaction: editTransaction,
-      selectedAccount: selectedAccount,
-    });
-  }
-
-  function chooseSofHandler() {
-    navigation.navigate("SelectSourceOfFund", {
-      editTransaction: editTransaction,
-      selectedCategory: selectedCategory,
-    });
-  }
-
-  const handleSheetChanges = (index) => {
-    // console.log("Sheet index:", index);
-    setIsBottomSheetOpen(index > 0);
-  };
-
-  const filteredCategory = CategoryCtx.categories.filter(
-    (category) => category.categoryType === activeTransaction
-  );
-  console.log("filtered category ", filteredCategory);
-
-  const backgroundColor =
-    transactionType === "Expense"
-      ? "#ffc8c8"
-      : transactionType === "Income"
-      ? "#8fff8f"
-      : transactionType === "Transfer"
-      ? "#80f9ff"
-      : "#d6d6d6";
-
-  const handleTransactionTypePress = (type) => {
-    setActiveTransaction(type);
-
-    // Move the background smoothly to the selected transaction type
   };
 
   return (
@@ -199,7 +132,7 @@ const AddTransaction = ({ route, navigation }) => {
       <SafeAreaView
         style={{
           ...styles.container,
-          backgroundColor,
+          backgroundColor: backgroundColor(transactionType),
         }}
       >
         <View style={{ ...styles.header, backgroundColor }}>
@@ -227,7 +160,7 @@ const AddTransaction = ({ route, navigation }) => {
           <Pressable
             style={[
               styles.transactionType,
-              activeTransaction === "Expense" && styles.activeTransactionType,
+              transactionType === "Expense" && styles.activeTransactionType,
             ]}
             onPress={() => handleTransactionTypePress("Expense")}
           >
@@ -236,7 +169,7 @@ const AddTransaction = ({ route, navigation }) => {
           <Pressable
             style={[
               styles.transactionType,
-              activeTransaction === "Income" && styles.activeTransactionType,
+              transactionType === "Income" && styles.activeTransactionType,
             ]}
             onPress={() => handleTransactionTypePress("Income")}
           >
@@ -245,7 +178,7 @@ const AddTransaction = ({ route, navigation }) => {
           <Pressable
             style={[
               styles.transactionType,
-              activeTransaction === "Transfer" && styles.activeTransactionType,
+              transactionType === "Transfer" && styles.activeTransactionType,
             ]}
             onPress={() => handleTransactionTypePress("Transfer")}
           >
@@ -254,18 +187,16 @@ const AddTransaction = ({ route, navigation }) => {
         </View>
         <Pressable
           style={styles.inputContainer}
-          // onPress={chooseCategoryHandler}
           onPress={() => bottomSheetCategoryRef.current?.expand()}
         >
-          <Text style={styles.input}>
-            {getCategoryText(editTransaction, selectedCategory)}
-          </Text>
+          <Text style={styles.input}>{getCategoryText(editTransaction)}</Text>
         </Pressable>
 
-        <Pressable style={styles.inputContainer} onPress={chooseSofHandler}>
-          <Text style={styles.input}>
-            {getSofText(editTransaction, selectedAccount)}
-          </Text>
+        <Pressable
+          style={styles.inputContainer}
+          onPress={() => bottomSheetSofRef.current?.expand()}
+        >
+          <Text style={styles.input}>{getSofText(editTransaction)}</Text>
         </Pressable>
 
         <InputField
@@ -305,16 +236,43 @@ const AddTransaction = ({ route, navigation }) => {
         onChange={handleSheetChanges}
         backdropComponent={BottomSheetBackdrop}
       >
-        <Text style={styles.bottomSheetTitle}>{activeTransaction}</Text>
+        <Text style={styles.bottomSheetTitle}>{transactionType}</Text>
         {filteredCategory.map((category) => (
           <Pressable
             style={{ padding: 8 }}
             key={category.id}
             onPress={() => {
               console.log(category.categoryName);
+              setCategory(category.categoryName);
+              bottomSheetCategoryRef.current?.close();
             }}
           >
             <Text>{category.categoryName}</Text>
+          </Pressable>
+        ))}
+      </BottomSheet>
+      <BottomSheet
+        ref={bottomSheetSofRef}
+        index={-1}
+        snapPoints={["40%", "62%"]}
+        enablePanDownToClose
+        contentHeight={"100%"}
+        onChange={handleSheetChanges}
+        backdropComponent={BottomSheetBackdrop}
+      >
+        {AccountCtx.accounts.map((account) => (
+          <Pressable
+            key={account.id}
+            style={styles.input}
+            onPress={() => {
+              bottomSheetSofRef.current?.close();
+              setSourceOfFund(account.accountName);
+            }}
+          >
+            <Text>{account.accountName}</Text>
+            <Text>
+              amount {account.initialBalance ? account.initialBalance : "Rp0"}
+            </Text>
           </Pressable>
         ))}
       </BottomSheet>
@@ -357,7 +315,6 @@ const styles = StyleSheet.create({
     fontSize: 32,
     padding: 24,
   },
-
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -370,7 +327,6 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
   },
-
   transactionTypeContainer: {
     flexDirection: "row",
     marginBottom: 20,
@@ -390,7 +346,6 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     padding: 8,
     borderRadius: 16,
-    // backgroundColor: "white", // Set the default white background color
   },
   activeTransactionType: {
     backgroundColor: "white", // Set the active white background color
